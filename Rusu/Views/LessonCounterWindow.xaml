@@ -63,7 +63,7 @@
                                          Margin="3"
                                          FontSize="16"
                                          Command="{Binding DataContext.ItemClickCommand, ElementName=window}"
-                                         CommandParameter="{Binding Days}"
+                                         CommandParameter="{Binding}"
                                          Content="{Binding Text}"
                                          GroupName="items"
                                          Foreground="White"
@@ -102,17 +102,28 @@
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <!--  Общий столбец  -->
-                <TextBlock Grid.Row="0" Style="{StaticResource DemonicTextBlock}" Text="{Binding DaysCount, StringFormat=Всего дней: {0}}"/>
-                <TextBlock Grid.Row="1" Style="{StaticResource DemonicTextBlock}"/>
-                <TextBlock Grid.Row="2" Style="{StaticResource DemonicTextBlock}"/>
+                <Border Style="{StaticResource DemonicBorder}" Padding="2,1">
+                    <TextBlock Style="{StaticResource DemonicTextBlock}" 
+                               Text="{Binding LessonsCount, StringFormat=Всего занятий: {0}}"/>
+                </Border>
+                <Border Grid.Row="1" Style="{StaticResource DemonicBorder}" Padding="2,1">
+                    <TextBlock Style="{StaticResource DemonicTextBlock}" 
+                               Text="{Binding OnlyOnlineDaysCount, StringFormat=Дней только онлайн: {0}}"/>
+                </Border>
+                <Border Grid.Column="1" Style="{StaticResource DemonicBorder}" Padding="2,1">
+                    <TextBlock Style="{StaticResource DemonicTextBlock}" 
+                               Text="{Binding PracticeDaysCount, StringFormat=Дней с практиками: {0}}"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource DemonicBorder}" Padding="2,1">
+                    <TextBlock Style="{StaticResource DemonicTextBlock}" 
+                               Text="{Binding DaysCount, StringFormat=Всего дней: {0}}"/>
+                </Border>
             </Grid>
         </Border>
     </Grid>
