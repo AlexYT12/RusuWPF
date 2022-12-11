@@ -1,0 +1,119 @@
+﻿<Window x:Class="Rusu.Views.LessonCounterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Rusu.Views"
+        xmlns:vm="clr-namespace:Rusu.ViewModels"
+        xmlns:core="clr-namespace:Rusu.Core"
+        mc:Ignorable="d"
+        Title="Сколько занятий между датами" Height="450" Width="800"
+        Name="window">
+    <Window.Resources>
+        <core:ConvertToBrushConverter x:Key="ToBrush"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <vm:LessonCounterWindowViewModel/>
+    </Window.DataContext>
+    <Grid Background="{Binding Background, Converter={StaticResource ToBrush}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!--  Даты  -->
+        <DatePicker SelectedDate="{Binding FirstDate}"/>
+        <DatePicker Grid.Column="1" SelectedDate="{Binding SecondDate}"/>
+
+        <!--  Разделы  -->
+        <TextBlock Style="{StaticResource DemonicTextBlock}"
+                   Background="{StaticResource DemonicBorderBackground}"
+                   Text="Предметы"
+                   TextAlignment="Center"
+                   FontSize="18"
+                   Grid.Row="1"/>
+        <TextBlock Style="{StaticResource DemonicTextBlock}"
+                   Background="{StaticResource DemonicBorderBackground}"
+                   Text="Даты"
+                   TextAlignment="Center"
+                   FontSize="18"
+                   Grid.Row="1"
+                   Grid.Column="1"/>
+
+        <!--  Списки  -->
+        <ScrollViewer Grid.Row="2"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Items}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource DemonicBorder}">
+                            <RadioButton Template="{StaticResource DemonicRadioButton}"
+                                         Margin="3"
+                                         FontSize="16"
+                                         Command="{Binding DataContext.ItemClickCommand, ElementName=window}"
+                                         CommandParameter="{Binding Days}"
+                                         Content="{Binding Text}"
+                                         GroupName="items"
+                                         Foreground="White"
+                                         HorizontalAlignment="Stretch"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="2"
+                      Grid.Column="1"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding ItemDays}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource DemonicBorder}">
+                            <TextBlock Text="{Binding}"
+                                       Style="{StaticResource DemonicTextBlock}"
+                                       Margin="3"
+                                       FontSize="16"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!--  Анализ  -->
+        <Border Grid.Row="3" Grid.ColumnSpan="2" Style="{StaticResource DemonicBorder}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <!--  Общий столбец  -->
+                <TextBlock Grid.Row="0" Style="{StaticResource DemonicTextBlock}" Text="{Binding DaysCount, StringFormat=Всего дней: {0}}"/>
+                <TextBlock Grid.Row="1" Style="{StaticResource DemonicTextBlock}"/>
+                <TextBlock Grid.Row="2" Style="{StaticResource DemonicTextBlock}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
