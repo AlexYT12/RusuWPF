@@ -4,7 +4,9 @@ using Rusu.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusu.ViewModels
 {
@@ -43,6 +45,13 @@ namespace Rusu.ViewModels
             set { _ItemDays = value; OnPropertyChanged(); }
         }
 
+        // Анализ
+        private int _LessonsCount;
+        public int LessonsCount
+        {
+            get { return _LessonsCount; }
+            set { _LessonsCount = value; OnPropertyChanged(); }
+        }
 
         private int _DaysCount;
         public int DaysCount
@@ -50,22 +59,50 @@ namespace Rusu.ViewModels
             get { return _DaysCount; }
             set { _DaysCount = value; OnPropertyChanged(); }
         }
+        private int _OnlyOnlineDaysCount;
+        public int OnlyOnlineDaysCount
+        {
+            get { return _OnlyOnlineDaysCount; }
+            set { _OnlyOnlineDaysCount = value; OnPropertyChanged(); }
+        }
+
+        private int _PracticeDaysCount;
+        public int PracticeDaysCount
+        {
+            get { return _PracticeDaysCount; }
+            set { _PracticeDaysCount = value; OnPropertyChanged(); }
+        }
 
         private async void UpdateAsync()
         {
+            // Подготовка
             Items.Clear();
+
+            LessonsCount = 0;
             DaysCount = 0;
+            OnlyOnlineDaysCount = 0;
+            PracticeDaysCount = 0;
+
+            List<Day> days = new List<Day>();
+
             if (FirstDate > SecondDate)
             {
                 var timed = FirstDate;
                 FirstDate = SecondDate;
                 SecondDate = timed;
             }
-            List<Day> days = new List<Day>();
+            DaysCount = (int)(SecondDate - FirstDate).TotalDays+1;
+
+            // Получения расписаний
             for (DateTime date = FirstDate; date <= SecondDate; date = date.AddDays(7))
             {
                 var week = await Parser.ScheduleAsync(date);
-                if (week != null) days.AddRange(week);
+                if (week == null) try
+                    {
+                        File.AppendAllText("data/log.txt", Environment.NewLine + "Parser error");
+                    }
+                    catch { }
+                else days.AddRange(week);
             }
 
             var items = new Dictionary<string, List<string>>();
@@ -74,29 +111,45 @@ namespace Rusu.ViewModels
                 else if (day.Date < FirstDate) continue;
                 else
                 {
-                    DaysCount++;
+                    int online = 0;
                     foreach (Lesson lesson in day.Lessons)
                     {
+                        LessonsCount++;
                         if (!items.ContainsKey(lesson.Name)) items.Add(lesson.Name, new List<string>());
 
                         var text = lesson.Id + ".  " + day.Date.ToShortDateString();
 
-                        if (lesson.IsOnline) text += " онлайн";
+                        if (lesson.IsOnline)
+                        {
+                            text += " онлайн";
+                            online++;
+                        }
 
                         items[lesson.Name].Add(text);
                     }
+                    if (online == day.Lessons.Count) OnlyOnlineDaysCount++;
+                    else PracticeDaysCount++;
                 }
-            foreach (var kv in items)
+            foreach (var kv in items) {
+                var online = kv.Value.Where(x => x.Contains("онлайн")).Count();
                 Items.Add(new LessonCounterModel
                 {
-                    Text = $"{kv.Key}: {kv.Value.Where(x => x.Contains("онлайн")).Count()}/{kv.Value.Count}",
+                    Text = $"{kv.Key}: {online}/{kv.Value.Count}",
+                    Online = online,
                     Days = kv.Value
                 });
+            }
         }
 
         public LessonCounterWindowViewModel()
         {
-            ItemClickCommand = new RelayCommand(x => ItemDays = (List<string>?)x);
+            ItemClickCommand = new RelayCommand(x =>
+            {
+                if (x is LessonCounterModel lcm)
+                {
+                    ItemDays = lcm.Days;
+                }
+            });
             UpdateAsync();
         }
     }

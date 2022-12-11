@@ -22,8 +22,8 @@ namespace Rusu.Models
             .AP("search-date=search-date").Parameters;
 
         // Версия
-        internal const string Version = @"Версия: 1.9.7";
-        internal const string UpdateDescription = @"Оптимизация, обновление шаблонов.";
+        internal const string Version = @"Версия: 1.9.7.1";
+        internal const string UpdateDescription = @"Добавлена аналитика в окно Сколько занятий.";
 
         /// <summary>
         /// Времена начала и конца занятий.
