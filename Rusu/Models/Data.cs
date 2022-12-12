@@ -15,8 +15,8 @@ namespace Rusu.Models
             .AP("search-date=search-date").Parameters;
 
         // Версия
-        internal const string Version = @"Версия: 1.9.7.2";
-        internal const string UpdateDescription = @"Лицензии удалены.";
+        internal const string VersionName = @"Бензопила";
+        internal const string VersionText = @"Версия: 1.9.7.3";
 
         /// <summary>
         /// Времена начала и конца занятий.

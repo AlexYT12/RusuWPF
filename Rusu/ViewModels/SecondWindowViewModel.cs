@@ -33,7 +33,7 @@ namespace Rusu.ViewModels
             set { _Text = value; OnPropertyChanged(); }
         }
 
-        private string _VersionText = Data.Version;
+        private string _VersionText = Data.VersionName;
         public string VersionText
         {
             get { return _VersionText; }
@@ -61,12 +61,11 @@ namespace Rusu.ViewModels
             VersionButton = new RelayCommand(async x =>
             {
                 string? saved = null;
-                if (VersionText == Data.Version)
-                    saved = Data.UpdateDescription;
-                if (saved is null) return;
+                if (VersionText == Data.VersionText) return;
+                saved = Data.VersionText;
                 VersionText = saved;
                 await Task.Delay(5000);
-                if (VersionText == saved) VersionText = Data.Version;
+                if (VersionText == saved) VersionText = Data.VersionName;
             });
         }
 
