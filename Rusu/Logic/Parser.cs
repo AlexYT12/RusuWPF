@@ -28,8 +28,6 @@ namespace Rusu.Logic
         /// <returns>Список дней</returns>
         internal static async Task<List<Day>?> ScheduleAsync(DateTime date)
         {
-            if (!Data.License) return null;
-
             // Получение данных.
             string raw;
             using (HttpClient client = new HttpClient())

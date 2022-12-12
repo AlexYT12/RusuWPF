@@ -19,11 +19,6 @@ namespace Rusu.Views
         {
             InitializeComponent();
 
-            if (File.Exists("license.txt"))
-                Data.LicenseTest(File.ReadAllText("license.txt"));
-            else if (File.Exists("data/license.txt"))
-                Data.LicenseTest(File.ReadAllText("data/license.txt"));
-
             var controller = new Controller((MainWindowViewModel)DataContext);
             controller.SecondWindow.ExitButton = new RelayCommand(x => OnClosing(null));
             controller.SecondWindow.TopMostButton = new RelayCommand(x => Topmost = !Topmost);

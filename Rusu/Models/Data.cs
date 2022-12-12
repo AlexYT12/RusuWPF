@@ -10,11 +10,6 @@ namespace Rusu.Models
 {
     internal static class Data
     {
-        /// <summary>
-        /// Лицензия
-        /// </summary>
-        internal static bool License { get; private set; }
-
         internal static readonly string ScheduleParserContent = new RequestContentBuilder()
             .AP("branch", "4935b3ff-0858-11e0-8be3-005056bd3ce5")
             .AP("year", "828ab065-a6a6-11ec-b157-3cecef02455b")
@@ -22,8 +17,8 @@ namespace Rusu.Models
             .AP("search-date=search-date").Parameters;
 
         // Версия
-        internal const string Version = @"Версия: 1.9.7.1";
-        internal const string UpdateDescription = @"Добавлена аналитика в окно Сколько занятий.";
+        internal const string Version = @"Версия: 1.9.7.2";
+        internal const string UpdateDescription = @"Лицензии удалены.";
 
         /// <summary>
         /// Времена начала и конца занятий.
@@ -83,16 +78,6 @@ namespace Rusu.Models
                         LessonRemindMinutes = value;
                 }
             return data;
-        }
-
-        internal static void LicenseTest(string key)
-        {
-            var download = Helper.ReadText(@"https://pastebin.com/raw/EsG12Swb");
-            if (download is null) return;
-            download = TemplateModel.RemoveByLabels(download, "/*", "*/");
-            var hashes = download.Split(',');
-            if (hashes.Contains(key))
-                License = true;
         }
     }
 }
