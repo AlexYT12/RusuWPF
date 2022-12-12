@@ -88,13 +88,12 @@ namespace Rusu.Models
     }
     public sealed class Lesson : TemplateModel
     {
-        public Lesson(byte id, string name, string teacher, string position, string lessonType)
+        public Lesson(byte id, string name, string teacher, string position)
         {
             Id = id;
             Name = name;
             Teacher = teacher;
             Position = position;
-            LessonType = lessonType;
         }
 
         public byte Id { get; set; }
@@ -106,15 +105,11 @@ namespace Rusu.Models
         /// Имя учителя.
         /// </summary>
         public string Teacher { get; set; }
-        /// <summary>
-        /// Место где будет проводится занятие.
-        /// </summary>
-        public string Position { get; set; }
 
         /// <summary>
-        /// Тип занятия
+        /// Места где будет проводится занятие.
         /// </summary>
-        public string LessonType { get; set; }
+        public string Position { get; set; }
 
         /// <summary>
         /// Время начала занятия.
@@ -151,7 +146,7 @@ namespace Rusu.Models
         {
             get
             {
-                return (IsOnline ? "Онлайн: " + Teacher : Position.Replace("ауд.", "Ауд.")) + ", " + LessonType;
+                return IsOnline ? ($"Онлайн: {Teacher}, {Position.Split(", ")[1]}") : Position.Replace("ауд.", "Ауд.");
             }
         }
 
@@ -200,7 +195,6 @@ namespace Rusu.Models
 
             new TemplateProperty("Url", "https://meet.google.com",  "Ссылка на занятие"),
             new TemplateProperty("IsOnline", "да", "Онлайн ли занятие"),
-            new TemplateProperty("LessonType", "лекции", "Тип занятия."),
             new TemplateProperty("PositionEdited", "Онлайн: Иван Иванович Иванов", "Редактированное место проведения занятия"),
             new TemplateProperty("Time", "12:40—14:15", "Время проведения пары"),
         };
@@ -219,7 +213,6 @@ namespace Rusu.Models
 
                 "Url" => Url,
                 "IsOnline" => IsOnline ? "да" : "нет",
-                "LessonType" => LessonType,
                 "PositionEdited" => PositionEdited,
                 "Time" => Time,
                 _ => null

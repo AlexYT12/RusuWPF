@@ -13,8 +13,7 @@ namespace Rusu.ViewModels
             2,
             "Иванов Иван Иванович",
             "Физика",
-            "ауд. 12",
-            "лекции"
+            "ауд. 12"
         );
         private string _Text = "";
         public string Text
