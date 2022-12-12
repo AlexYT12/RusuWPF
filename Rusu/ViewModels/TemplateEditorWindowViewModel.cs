@@ -1,8 +1,6 @@
 ﻿using Rusu.Core;
-using Rusu.Logic;
 using Rusu.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Rusu.ViewModels
@@ -13,9 +11,10 @@ namespace Rusu.ViewModels
         private static readonly Lesson lessonTest = new Lesson
         (
             2,
+            "Иванов Иван Иванович",
             "Физика",
             "ауд. 12",
-            "Иванов Иван Иванович"
+            "лекции"
         );
         private string _Text = "";
         public string Text

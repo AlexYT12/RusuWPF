@@ -69,11 +69,11 @@ namespace Rusu.Models
         {
             return name switch
             {
-                "Date"=>Date.ToShortDateString(),
+                "Date" => Date.ToShortDateString(),
                 "DayOfWeek" => DayOfWeek,
-                "ShortDate"=> ShortDate,
+                "ShortDate" => ShortDate,
                 "WeekDate" => WeekDate,
-                _ =>null
+                _ => null
             };
         }
 
@@ -88,12 +88,13 @@ namespace Rusu.Models
     }
     public sealed class Lesson : TemplateModel
     {
-        public Lesson(byte id, string name, string teacher, string position)
+        public Lesson(byte id, string name, string teacher, string position, string lessonType)
         {
             Id = id;
             Name = name;
             Teacher = teacher;
             Position = position;
+            LessonType = lessonType;
         }
 
         public byte Id { get; set; }
@@ -109,6 +110,11 @@ namespace Rusu.Models
         /// Место где будет проводится занятие.
         /// </summary>
         public string Position { get; set; }
+
+        /// <summary>
+        /// Тип занятия
+        /// </summary>
+        public string LessonType { get; set; }
 
         /// <summary>
         /// Время начала занятия.
@@ -145,7 +151,7 @@ namespace Rusu.Models
         {
             get
             {
-                return IsOnline ? "Онлайн: " + Teacher : Position.Replace("ауд.", "Ауд.");
+                return (IsOnline ? "Онлайн: " + Teacher : Position.Replace("ауд.", "Ауд.")) + ", " + LessonType;
             }
         }
 
@@ -194,6 +200,7 @@ namespace Rusu.Models
 
             new TemplateProperty("Url", "https://meet.google.com",  "Ссылка на занятие"),
             new TemplateProperty("IsOnline", "да", "Онлайн ли занятие"),
+            new TemplateProperty("LessonType", "лекции", "Тип занятия."),
             new TemplateProperty("PositionEdited", "Онлайн: Иван Иванович Иванов", "Редактированное место проведения занятия"),
             new TemplateProperty("Time", "12:40—14:15", "Время проведения пары"),
         };
@@ -210,10 +217,11 @@ namespace Rusu.Models
                 "Start" => $"{Start.Hours:d2}:{Start.Minutes:d2}",
                 "End" => $"{End.Hours:d2}:{End.Minutes:d2}",
 
-                "Url"=>Url,
-                "IsOnline"=>IsOnline ? "да" : "нет",
-                "PositionEdited"=>PositionEdited,
-                "Time"=>Time,
+                "Url" => Url,
+                "IsOnline" => IsOnline ? "да" : "нет",
+                "LessonType" => LessonType,
+                "PositionEdited" => PositionEdited,
+                "Time" => Time,
                 _ => null
             };
         }

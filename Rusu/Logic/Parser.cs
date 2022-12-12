@@ -58,14 +58,15 @@ namespace Rusu.Logic
                     var id = Convert.ToByte(lessonMatch.Groups[1].Value);
                     var name = lessonMatch.Groups[2].Value;
                     var lesson = day.Lessons.Find(x => x.Id == id && x.Name == name);
-                    var position = lessonMatch.Groups[4].Value;
+                    var position = lessonMatch.Groups[4].Value.Split(", ");
                     if (lesson is null)
                         day.Lessons.Add(new Lesson(
 
                             id,
                             name,
                             lessonMatch.Groups[3].Value,
-                            position
+                            position[0],
+                            position[1]
                         ));
                     else
                         lesson.Position += Environment.NewLine + position;

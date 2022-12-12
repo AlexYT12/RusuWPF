@@ -3,8 +3,6 @@ using Rusu.Logic;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Rusu.Models
 {
@@ -72,11 +70,11 @@ namespace Rusu.Models
             Dictionary<string, string?> data = Parser.ParseByLineAndChar(File.ReadAllLines("data/data.txt"));
             var remind = data.GoN("remind");
             if (remind != null)
-                {
-                    int value;
-                    if (int.TryParse(remind, out value))
-                        LessonRemindMinutes = value;
-                }
+            {
+                int value;
+                if (int.TryParse(remind, out value))
+                    LessonRemindMinutes = value;
+            }
             return data;
         }
     }

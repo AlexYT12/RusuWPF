@@ -4,9 +4,7 @@ using Rusu.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Rusu.ViewModels
 {
@@ -91,18 +89,13 @@ namespace Rusu.ViewModels
                 FirstDate = SecondDate;
                 SecondDate = timed;
             }
-            DaysCount = (int)(SecondDate - FirstDate).TotalDays+1;
+            DaysCount = (int)(SecondDate - FirstDate).TotalDays + 1;
 
             // Получения расписаний
             for (DateTime date = FirstDate; date <= SecondDate; date = date.AddDays(7))
             {
                 var week = await Parser.ScheduleAsync(date);
-                if (week == null) try
-                    {
-                        File.AppendAllText("data/log.txt", Environment.NewLine + "Parser error");
-                    }
-                    catch { }
-                else days.AddRange(week);
+                if (week != null) days.AddRange(week);
             }
 
             var items = new Dictionary<string, List<string>>();
@@ -130,7 +123,8 @@ namespace Rusu.ViewModels
                     if (online == day.Lessons.Count) OnlyOnlineDaysCount++;
                     else PracticeDaysCount++;
                 }
-            foreach (var kv in items) {
+            foreach (var kv in items)
+            {
                 var online = kv.Value.Where(x => x.Contains("онлайн")).Count();
                 Items.Add(new LessonCounterModel
                 {

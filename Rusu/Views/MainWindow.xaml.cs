@@ -1,10 +1,8 @@
 ﻿using Rusu.Core;
 using Rusu.Logic;
-using Rusu.Models;
 using Rusu.ViewModels;
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
