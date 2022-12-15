@@ -15,8 +15,8 @@ namespace Rusu.Models
             .AP("search-date=search-date").Parameters;
 
         // Версия
-        internal const string VersionName = @"Бензопила";
-        internal const string VersionText = @"Версия: 1.9.7.3";
+        internal const string VersionName = @"Solo leveling";
+        internal const string VersionText = @"Версия: 1.9.7.4";
 
         /// <summary>
         /// Времена начала и конца занятий.
