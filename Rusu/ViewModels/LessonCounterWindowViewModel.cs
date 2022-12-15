@@ -103,7 +103,8 @@ namespace Rusu.ViewModels
                 DaysCount = (int)(SecondDate - FirstDate).TotalDays + 1;
 
                 // Получения расписаний
-                for (DateTime date = FirstDate; date <= SecondDate; date = date.AddDays(7))
+                var before = SecondDate.AddDays(7);
+                for (DateTime date = FirstDate; date <= before; date = date.AddDays(7))
                 {
                     var week = await Parser.ScheduleAsync(date);
                     if (week != null) days.AddRange(week);
