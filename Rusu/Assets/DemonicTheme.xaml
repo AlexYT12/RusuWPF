@@ -1,14 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:core="clr-namespace:Rusu.Core">
+                    xmlns:core="clr-namespace:Rusu.Core"
+                    xmlns:models="clr-namespace:Rusu.Models">
     <core:ConvertToBrushConverter x:Key="ToBrush"/>
+    
     <Style TargetType="TextBlock" x:Key="DemonicTextBlock">
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Foreground" Value="{Binding Path=(models:Theme.TextColor)}"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
     <Style TargetType="TextBlock" x:Key="DemonicTextBlockVisible" BasedOn="{StaticResource DemonicTextBlock}">
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
         <Style.Triggers>
             <Trigger Property="Text" Value="">
                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -16,11 +16,9 @@
         </Style.Triggers>
     </Style>
 
-    <SolidColorBrush x:Key="DemonicBorderBackground" Color="#65000000"/>
-
-    <Style TargetType="Border"  x:Key="DemonicBorder">
-        <Setter Property="Background" Value="{StaticResource DemonicBorderBackground}"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+    <Style TargetType="Border" x:Key="DemonicBorder">
+        <Setter Property="Background" Value="{Binding Path=(models:Theme.BorderBackground)}"/>
+        <Setter Property="BorderBrush" Value="{Binding Path=(models:Theme.BorderColor)}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
 
@@ -41,43 +39,43 @@
     </ControlTemplate>
     <Style x:Key="DemonicButton" TargetType="Button">
         <Setter Property="Template" Value="{StaticResource UnStyleButton}"/>
-        <Setter Property="Background" Value="#A4000000"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{Binding Path=(models:Theme.ButtonBackground)}"/>
+        <Setter Property="Foreground" Value="{Binding Path=(models:Theme.TextColor)}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="2"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#B2222222"/>
+                <Setter Property="Background" Value="{Binding Path=(models:Theme.ButtonMouseOverBackground)}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" Value="#B0000000"/>
+                <Setter Property="Background" Value="{Binding Path=(models:Theme.ButtonPressedBackground)}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="DemonicButtonNoBackground" TargetType="Button">
         <Setter Property="Template" Value="{StaticResource UnStyleButton}"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="DarkGray"/>
+        <Setter Property="Foreground" Value="{Binding Path=(models:Theme.ButtonNoBackgroundColor)}"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Padding" Value="2"/>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="Gray"/>
+                <Setter Property="Foreground" Value="{Binding Path=(models:Theme.ButtonNoBackgroundMouseOverColor)}"/>
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Foreground" Value="Black"/>
+                <Setter Property="Foreground" Value="{Binding Path=(models:Theme.ButtonNoBackgroundPressedColor)}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
     
     <Style TargetType="TextBox" x:Key="DemonicTextBox">
-        <Setter Property="Background" Value="#BF000000"/>
-        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{Binding Path=(models:Theme.BorderBackground)}"/>
+        <Setter Property="Foreground" Value="{Binding Path=(models:Theme.TextColor)}"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Padding" Value="3"/>
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderBrush" Value="{Binding Path=(models:Theme.BorderColor)}"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
@@ -92,10 +90,10 @@
             <Rectangle Width="2">
                 <Rectangle.Style>
                     <Style TargetType="Rectangle">
-                        <Setter Property="Fill" Value="Gray"/>
+                        <Setter Property="Fill" Value="{Binding Path=(models:Theme.RadioButtonDefaultColor)}"/>
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource TemplatedParent}}" Value="True">
-                                <Setter Property="Fill" Value="White"/>
+                                <Setter Property="Fill" Value="{Binding Path=(models:Theme.RadioButtonSelectedColor)}"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
