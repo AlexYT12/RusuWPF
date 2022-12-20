@@ -53,6 +53,21 @@ namespace Rusu.Core
                      && color[3] == 'p')
                     || color.StartsWith("pack://application:"))
                     return new ImageBrush(new BitmapImage(new Uri(color, UriKind.RelativeOrAbsolute)));
+                if (color[0] == '^')
+                {
+                    bool radial = color[1] == 'R';
+                    string[] list = color.Remove(0, 2).Split('|');
+                    double angle;
+                    var start = 0;
+                    if (double.TryParse(list[0], out angle)) start = 1;
+                    var colors = new GradientStopCollection();
+                    while (start < list.Length)
+                    {
+                        colors.Add(new GradientStop((Color)ColorConverter.ConvertFromString(color), start/list.Length));
+                        start++;
+                    }
+                    return radial ? new RadialGradientBrush(colors) : new LinearGradientBrush(colors, angle);
+                }
                 return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
             }
             catch
