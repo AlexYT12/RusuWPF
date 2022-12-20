@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Rusu.Views"
         xmlns:vm="clr-namespace:Rusu.ViewModels"
         xmlns:core="clr-namespace:Rusu.Core"
+        xmlns:models="clr-namespace:Rusu.Models"
         mc:Ignorable="d"
         Title="Сколько занятий между датами" Height="450" Width="800"
         Name="window">
@@ -33,13 +34,13 @@
 
         <!--  Разделы  -->
         <TextBlock Style="{StaticResource DemonicTextBlock}"
-                   Background="{StaticResource DemonicBorderBackground}"
+                   Background="{Binding Path=(models:Theme.BorderBackground)}"
                    Text="Предметы"
                    TextAlignment="Center"
                    FontSize="18"
                    Grid.Row="1"/>
         <TextBlock Style="{StaticResource DemonicTextBlock}"
-                   Background="{StaticResource DemonicBorderBackground}"
+                   Background="{Binding Path=(models:Theme.BorderBackground)}"
                    Text="Даты"
                    TextAlignment="Center"
                    FontSize="18"
