@@ -1,4 +1,5 @@
-﻿using Rusu.Core;
+﻿using RucSu.Models;
+using Rusu.Core;
 using Rusu.Logic;
 using Rusu.Models;
 using System;
@@ -106,7 +107,7 @@ namespace Rusu.ViewModels
                 var before = SecondDate.AddDays(7);
                 for (DateTime date = FirstDate; date <= before; date = date.AddDays(7))
                 {
-                    var week = await Parser.ScheduleAsync(date);
+                    var week = await Parser.SearchScheduleAsync(date);
                     if (week != null) days.AddRange(week);
                 }
 

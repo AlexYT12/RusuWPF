@@ -1,4 +1,5 @@
-﻿using Rusu.Core;
+﻿using RucSu.Models;
+using Rusu.Core;
 using Rusu.Models;
 using Rusu.ViewModels;
 using Rusu.Views;
@@ -8,6 +9,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Threading;
+using RucSu.Logic;
+using Rusu.Lib;
 
 namespace Rusu.Logic
 {
@@ -128,11 +131,6 @@ namespace Rusu.Logic
                 }
                 LessonCounterWindow.Show();
             });
-
-            // Таймер.
-            Timer.Tick += new EventHandler(Conditions);
-            Timer.Interval = TimeSpan.FromSeconds(7);
-            Timer.Start();
         }
 
         internal async void RunAsync()
@@ -142,9 +140,9 @@ namespace Rusu.Logic
             MainWindow.SecondText = today.ToShortDateString();
 
             // Расписание
-            var Schedule = await Parser.ScheduleAsync(today);
+            var Schedule = await Parser.SearchScheduleAsync(today);
             if (Schedule is null) return;
-            var NextWeek = await Parser.ScheduleAsync(today.AddDays(7));
+            var NextWeek = await Parser.SearchScheduleAsync(today.AddDays(7));
             if (NextWeek != null) Schedule.AddRange(NextWeek);
             Today = Schedule.Find(x => x.Date == today);
 
@@ -250,94 +248,6 @@ namespace Rusu.Logic
                     if (float.TryParse(value, out volume))
                         MainWindow.MediaVolume = volume;
                 }
-            }
-        }
-
-        private DispatcherTimer Timer = new DispatcherTimer();
-
-        private DateTime _LastUpdate;
-
-        internal void Conditions(object? sender = null, EventArgs? e = null)
-        {
-            // Переменные
-            var date = DateTime.Now;
-            MainWindow.MainText = date.ToString("HH.mm"); // Обновить время.
-
-            if (Today is null || Today.Lessons.Count == 0) return;
-
-            // Условия
-            if (CurrentLesson is null)
-            {
-                // Проверяет началось ли занятие.
-                foreach (Lesson lesson in Today.Lessons)
-                    if (lesson.Start < date.AddMinutes(Data.LessonRemindMinutes).TimeOfDay && lesson.End > date.TimeOfDay)
-                    {
-                        CurrentLesson = lesson;
-                        SecondWindow.Text = StringFormater.LessonAsString(lesson, Data.ProgramLessonTemplatePath); // Установить текущее занятие.
-                        if (lesson.IsOnline)
-                        {
-                            string? url = lesson.Url ?? Data.Links.GoN("default");
-
-                            var value = DataSettings.GoN("auto-open");
-                            if (value != null)
-                            {
-                                if (value == "true" && !string.IsNullOrWhiteSpace(url))
-                                    Process.Start(new ProcessStartInfo(DataSettings.GoN("link-format")?.Replace("<$Url>", url) ?? url)
-                                    { UseShellExecute = true });
-                            }
-                            else // Уведомление.
-                            {
-                                var minutes = (lesson.Start - date.TimeOfDay).TotalMinutes;
-                                if (string.IsNullOrWhiteSpace(url))
-                                    MessageWindow.MessageBox(minutes < 0 ?
-                                    $"Занятие уже идёт {Math.Round(-minutes)}мин."
-                                   : $"Через {Math.Round(minutes)}мин. начнётся занятие по {lesson.Name}.");
-                                else
-                                    MessageWindow.MessageBox(minutes < 0 ?
-                                    $"Занятие уже идёт {Math.Round(-minutes)}мин."
-                                   : $"Через {Math.Round(minutes)}мин. начнётся занятие по {lesson.Name}.",
-                                    "Открыть", () =>
-                                    {
-                                        Process.Start(new ProcessStartInfo(DataSettings.GoN("link-format")?.Replace("<$Url>", url) ?? url)
-                                        { UseShellExecute = true });
-                                    });
-
-                                var program = DataSettings.GoN("lesson-start");
-                                if (program != null) Process.Start(program);
-                            }
-                        }
-                        break;
-                    }
-            }
-            else
-            {
-                var end = (CurrentLesson.End - date.TimeOfDay).TotalMinutes; // Сколько минут до конца занятия.
-                if (end < 0) // Проверить закончилось ли занятие.
-                {
-                    var program = DataSettings.GoN("lesson-end");
-                    if (program != null) Process.Start(program);
-                    SecondWindow.Text = null;
-                    CurrentLesson = null;
-                    MainWindow.SecondText = DateTime.Today.ToShortDateString();
-                }
-                else if (_LastUpdate.AddSeconds(30) < DateTime.Now)
-                {
-                    MainWindow.SecondText = DateTime.Today.ToShortDateString(); // Отобразить дату.
-                    _LastUpdate = DateTime.Now;
-                }
-                else MainWindow.SecondText = $"Осталось: {Math.Round(end)} минут."; // Обновить время конца.
-            }
-        }
-
-        internal void MacrosRun(string path)
-        {
-            if (CurrentLesson == null) Process.Start(path);
-            else
-            {
-                var arguments = new string[Lesson._Parameters.Length];
-                for (int i = 0; i < arguments.Length; i++)
-                    arguments[i] = CurrentLesson.GetValue(Lesson._Parameters[i].Name) ?? "null";
-                Process.Start(path, arguments);
             }
         }
     }

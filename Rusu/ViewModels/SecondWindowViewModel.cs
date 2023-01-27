@@ -1,5 +1,6 @@
-﻿using Rusu.Core;
-using Rusu.Logic;
+﻿using RucSu.Logic;
+using RucSu.Models;
+using Rusu.Core;
 using Rusu.Models;
 using Rusu.Views;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace Rusu.ViewModels
             CopyButton = new RelayCommand(x =>
             {
                 if (SelectedDay is null) return;
-                string text = StringFormater.DayAsString(SelectedDay, Data.DayTemplatePath, SelectedDay.ShortDate);
+                string text = StringFormater.DayAsString(SelectedDay, date: SelectedDay.ShortDate);
                 Clipboard.SetText(text);
             });
             VersionButton = new RelayCommand(async x =>

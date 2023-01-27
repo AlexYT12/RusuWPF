@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Rusu.Views"
         xmlns:vm="clr-namespace:Rusu.ViewModels"
-        xmlns:core="clr-namespace:Rusu.Core"
+        xmlns:lib="clr-namespace:Rusu.Lib"
         xmlns:models="clr-namespace:Rusu.Models"
         mc:Ignorable="d"
         Title="Сколько занятий между датами" Height="450" Width="800"
         Name="window">
     <Window.Resources>
-        <core:ConvertToBrushConverter x:Key="ToBrush"/>
+        <lib:ConvertToBrushConverter x:Key="ToBrush"/>
     </Window.Resources>
     <Window.DataContext>
         <vm:LessonCounterWindowViewModel/>
@@ -34,13 +34,13 @@
 
         <!--  Разделы  -->
         <TextBlock Style="{StaticResource DemonicTextBlock}"
-                   Background="{Binding Path=(models:Theme.BorderBackground)}"
+                   Background="Black"
                    Text="Предметы"
                    TextAlignment="Center"
                    FontSize="18"
                    Grid.Row="1"/>
         <TextBlock Style="{StaticResource DemonicTextBlock}"
-                   Background="{Binding Path=(models:Theme.BorderBackground)}"
+                   Background="Black"
                    Text="Даты"
                    TextAlignment="Center"
                    FontSize="18"

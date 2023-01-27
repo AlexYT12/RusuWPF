@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RusuWPF", "Rusu\RusuWPF.csproj", "{AE225958-5CBD-4D82-BDB9-76527F779BD4}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RucSu", "..\RucSu\RucSu\RucSu.csproj", "{6121F846-3EC3-4E93-ACF4-07C6A5F15635}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{AE225958-5CBD-4D82-BDB9-76527F779BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE225958-5CBD-4D82-BDB9-76527F779BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE225958-5CBD-4D82-BDB9-76527F779BD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6121F846-3EC3-4E93-ACF4-07C6A5F15635}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6121F846-3EC3-4E93-ACF4-07C6A5F15635}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6121F846-3EC3-4E93-ACF4-07C6A5F15635}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6121F846-3EC3-4E93-ACF4-07C6A5F15635}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

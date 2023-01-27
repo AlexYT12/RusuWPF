@@ -9,6 +9,7 @@
     <AssemblyVersion>1.0.9.4</AssemblyVersion>
     <SignAssembly>False</SignAssembly>
     <StartupObject>Rusu.App</StartupObject>
+    <RootNamespace>Rusu</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\Icon.ico" />
+    <ProjectReference Include="..\..\RucSu\RucSu\RucSu.csproj" />
   </ItemGroup>
 
   <ItemGroup>

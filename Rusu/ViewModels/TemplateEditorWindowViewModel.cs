@@ -1,5 +1,7 @@
-﻿using Rusu.Core;
+﻿using RucSu.Models;
+using Rusu.Core;
 using Rusu.Models;
+using Rusu.Lib;
 using System;
 using System.IO;
 
@@ -35,10 +37,10 @@ namespace Rusu.ViewModels
             {
                 return Selected switch
                 {
-                    0 => Data.LessonTemplatePath,
-                    1 => Data.DayTemplatePath,
-                    2 => Data.ProgramLessonTemplatePath,
-                    3 => Data.ProgramDayTemplatePath,
+                    //0 => Data.LessonTemplatePath,
+                    //1 => Data.DayTemplatePath,
+                    //2 => Data.ProgramLessonTemplatePath,
+                    //3 => Data.ProgramDayTemplatePath,
                     _ => null
                 };
             }
@@ -77,10 +79,10 @@ namespace Rusu.ViewModels
             {
                 switch (Selected)
                 {
-                    case 0:
-                    case 2: Text = TemplateModel.GetDocumentation(Lesson._Parameters); break;
-                    case 1:
-                    case 3: Text = TemplateModel.GetDocumentation(Day._Parameters); break;
+                    //case 0:
+                    //case 2: Text = TemplateModel.GetDocumentation(Lesson._Parameters); break;
+                    //case 1:
+                    //case 3: Text = TemplateModel.GetDocumentation(Day._Parameters); break;
                     default: return;
                 }
             });
