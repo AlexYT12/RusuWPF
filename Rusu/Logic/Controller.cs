@@ -5,11 +5,8 @@ using Rusu.ViewModels;
 using Rusu.Views;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
-using System.Windows.Threading;
-using RucSu.Logic;
 using Rusu.Lib;
 
 namespace Rusu.Logic

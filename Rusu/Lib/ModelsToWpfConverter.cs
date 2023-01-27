@@ -11,7 +11,7 @@ namespace Rusu.Lib
     public class ModelsToWpfConverter : IValueConverter
     {
         private const string _dayTemplatePath = "data/Templates/ProgramDayTemplate.txt";
-        private const string? _lessonTemplatePath = "data/Templates/ProgramLessonTemplate.txt";
+        private const string _lessonTemplatePath = "data/Templates/ProgramLessonTemplate.txt";
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

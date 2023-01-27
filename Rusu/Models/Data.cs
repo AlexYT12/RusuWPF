@@ -13,6 +13,10 @@ internal static class Data
     internal const string VersionName = @"К истокам";
     internal const string VersionText = @"Версия: 1.9.8.0";
 
+
+    internal const string DayTemplatePath = "data/Templates/DayTemplate.txt";
+    internal const string LessonTemplatePath = "data/Templates/LessonTemplate.txt";
+
     /// <summary>
     /// Загрузка данных.
     /// </summary>

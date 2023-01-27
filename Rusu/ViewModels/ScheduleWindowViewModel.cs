@@ -2,9 +2,11 @@
 using RucSu.Models;
 using Rusu.Core;
 using Rusu.Logic;
+using Rusu.Models;
 using Rusu.Views;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 
 namespace Rusu.ViewModels;
@@ -38,7 +40,10 @@ public sealed class ScheduleWindowViewModel : ObservableObject
             {
                 string text = "";
                 foreach (Day day in Days)
-                    text += StringFormater.DayAsString(day, date: day.ToString()) + Environment.NewLine + Environment.NewLine;
+                    text += StringFormater.DayAsString(day,
+                        File.Exists(Data.DayTemplatePath) ? File.ReadAllText(Data.DayTemplatePath) : null,
+                        date: day.ToString(),
+                        lessonTemplate: File.Exists(Data.LessonTemplatePath) ? File.ReadAllText(Data.LessonTemplatePath) : null) + Environment.NewLine + Environment.NewLine;
                 Clipboard.SetText(text.Remove(text.Length - Environment.NewLine.Length * 2));
             }
         });
