@@ -13,7 +13,7 @@ namespace Rusu.ViewModels
 {
     public sealed class LessonCounterWindowViewModel : ObservableObject
     {
-        // Задний фон
+        // фон
         private string _Background = "White";
         private CancellationTokenSource? _DownloadWorking;
         public string Background

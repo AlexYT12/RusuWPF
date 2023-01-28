@@ -25,7 +25,7 @@ namespace Rusu.Logic
 
         // Окна
         internal MainWindowViewModel MainWindow { get; set; }
-        internal SecondWindowViewModel SecondWindow { get; set; }
+        internal MainWindowViewModel SecondWindow { get; set; }
         internal MessageWindowViewModel MessageWindow { get; set; }
         internal ScheduleWindow? ScheduleWindow { get; set; }
         internal TemplateEditorWindow? TemplateEditorWindow { get; set; }
@@ -46,7 +46,7 @@ namespace Rusu.Logic
         {
             // Создание окон.
             MainWindow = mainWindow;
-            SecondWindow = (SecondWindowViewModel)new SecondWindow().DataContext;
+            SecondWindow = (MainWindowViewModel)new SecondWindow().DataContext;
             MessageWindow = (MessageWindowViewModel)new MessageWindow().DataContext;
 
             // Команды.

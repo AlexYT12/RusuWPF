@@ -1,31 +1,75 @@
-﻿using System;
+﻿using RucSu.Logic;
+using RucSu.Models;
+using Rusu.Core;
+using Rusu.Models;
+using Rusu.Views;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Rusu.ViewModels
 {
-    public sealed class MainWindowViewModel : Core.ObservableObject
+    public sealed class MainWindowViewModel : ObservableObject
     {
-        internal Action? ActionRun { get; set; }
-        private string _MainText = "Привет";
-        public string MainText
+        public SecondWindow? View { get; set; }
+
+        public Day? FirstDay { get; set; }
+        public Day? SecondDay { get; set; }
+
+        private Day? _SelectedDay;
+        public Day? SelectedDay
         {
-            get { return _MainText; }
-            set { _MainText = value; OnPropertyChanged(); }
+            get { return _SelectedDay; }
+            set
+            {
+                _SelectedDay = value;
+                OnPropertyChanged();
+                OnPropertyChanged("ScheduleCurrentDateName");
+            }
         }
 
-        private string _SecondText = "Загрузка...";
-        public string SecondText
+        private string? _Text;
+        public string? Text
         {
-            get { return _SecondText; }
-            set { _SecondText = value; OnPropertyChanged(); }
+            get { return _Text; }
+            set { _Text = value; OnPropertyChanged(); }
         }
 
-        private string _OptionalText = "";
-        public string OptionalText
+        private string _VersionText = Data.VersionName;
+        public string VersionText
         {
-            get { return _OptionalText; }
-            set { _OptionalText = value; OnPropertyChanged(); }
+            get { return _VersionText; }
+            set { _VersionText = value; OnPropertyChanged(); }
+        }
+
+        public string ScheduleCurrentDateName
+        {
+            get { return $"Расписание на {StringFormater.ShortDateName(SelectedDay?.Date) ?? SelectedDay?.DayOfWeek}"; }
+        }
+
+        public MainWindowViewModel()
+        {
+            // Команды.
+            ChangeButton = new RelayCommand(x =>
+            {
+                SelectedDay = SelectedDay == FirstDay ? SecondDay : FirstDay;
+            });
+            CopyButton = new RelayCommand(x =>
+            {
+                if (SelectedDay is null) return;
+                string text = StringFormater.DayAsString(SelectedDay, File.Exists(Data.DayTemplatePath) ? File.ReadAllText(Data.DayTemplatePath) : null,
+                    lessonTemplate: File.Exists(Data.LessonTemplatePath) ? File.ReadAllText(Data.LessonTemplatePath) : null);
+                Clipboard.SetText(text);
+            });
+            VersionButton = new RelayCommand(async x =>
+            {
+                string? saved = null;
+                if (VersionText == Data.VersionText) return;
+                saved = Data.VersionText;
+                VersionText = saved;
+                await Task.Delay(5000);
+                if (VersionText == saved) VersionText = Data.VersionName;
+            });
         }
 
         private string _Background = @"White";
@@ -35,46 +79,58 @@ namespace Rusu.ViewModels
             set { _Background = value; OnPropertyChanged(); }
         }
 
-        private Core.RelayCommand? _HomeCommand;
-        public Core.RelayCommand? HomeCommand
+        private RelayCommand? _ScheduleButton;
+        public RelayCommand? ScheduleButton
         {
-            get { return _HomeCommand; }
-            set { _HomeCommand = value; OnPropertyChanged(); }
+            get { return _ScheduleButton; }
+            set { _ScheduleButton = value; OnPropertyChanged(); }
         }
 
-        private string _Media = "";
-        public string Media
+        public RelayCommand ChangeButton { get; set; }
+
+        public RelayCommand CopyButton { get; set; }
+
+        private RelayCommand? _MinimizeButton;
+        public RelayCommand? MinimizeButton
         {
-            get { return _Media; }
-            set { _Media = value; OnPropertyChanged(); }
+            get { return _MinimizeButton; }
+            set { _MinimizeButton = value; OnPropertyChanged(); }
         }
 
-        private float _MediaVolume = 1F;
-        public float MediaVolume
+        private RelayCommand? _TopMostButton;
+        public RelayCommand? TopMostButton
         {
-            get { return _MediaVolume; }
-            set { _MediaVolume = value; OnPropertyChanged(); }
+            get { return _TopMostButton; }
+            set { _TopMostButton = value; OnPropertyChanged(); }
         }
 
-        private VerticalAlignment _MediaVerticalAlignment = VerticalAlignment.Stretch;
-        public VerticalAlignment MediaVerticalAlignment
+        private RelayCommand? _ExitButton;
+        public RelayCommand? ExitButton
         {
-            get { return _MediaVerticalAlignment; }
-            set { _MediaVerticalAlignment = value; OnPropertyChanged(); }
+            get { return _ExitButton; }
+            set { _ExitButton = value; OnPropertyChanged(); }
         }
 
-        private HorizontalAlignment _MediaHorizontalAlignment = HorizontalAlignment.Stretch;
-        public HorizontalAlignment MediaHorizontalAlignment
+        public RelayCommand VersionButton { get; set; }
+
+        private RelayCommand? _TemplateEditorButton;
+        public RelayCommand? TemplateEditorButton
         {
-            get { return _MediaHorizontalAlignment; }
-            set { _MediaHorizontalAlignment = value; OnPropertyChanged(); }
+            get { return _TemplateEditorButton; }
+            set { _TemplateEditorButton = value; OnPropertyChanged(); }
         }
 
-        private Stretch _MediaStretch = Stretch.Uniform;
-        public Stretch MediaStretch
+        private RelayCommand? _LessonCounterButton;
+        public RelayCommand? LessonCounterButton
         {
-            get { return _MediaStretch; }
-            set { _MediaStretch = value; OnPropertyChanged(); }
+            get { return _LessonCounterButton; }
+            set { _LessonCounterButton = value; OnPropertyChanged(); }
+        }
+
+
+        public void Show()
+        {
+            View?.Show();
         }
     }
 }
