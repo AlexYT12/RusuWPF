@@ -2,6 +2,9 @@
 
 namespace Rusu.Lib;
 
+/// <summary>
+/// Методы расширения для Словаря
+/// </summary>
 internal static class DictionaryExtensions
 {
     /// <summary>
