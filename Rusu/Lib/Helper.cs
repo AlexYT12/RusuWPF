@@ -78,6 +78,7 @@ internal static class Helper
         return value;
     }
 }
+
 /// <summary>
 /// Конвертер строки в цвет.
 /// </summary>

@@ -3,7 +3,7 @@
                     xmlns:lib="clr-namespace:Rusu.Lib"
                     xmlns:models="clr-namespace:Rusu.Models">
     <lib:ConvertToBrushConverter x:Key="ToBrush"/>
-    <lib:ModelsToWpfConverter x:Key="ConvertToString"/>
+    <lib:ModelsToWpfConverter x:Key="ToWpf"/>
 
     <Style TargetType="TextBlock" x:Key="DemonicTextBlock">
         <Setter Property="Foreground" Value="white"/>
@@ -18,7 +18,7 @@
     </Style>
 
     <Style TargetType="Border" x:Key="DemonicBorder">
-        <Setter Property="Background" Value="#65000000"/>
+        <Setter Property="Background" Value="#66000000"/>
         <Setter Property="BorderBrush" Value="Black"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>

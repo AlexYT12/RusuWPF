@@ -15,9 +15,9 @@ internal static class DictionaryExtensions
     /// <returns>значение или null</returns>
     internal static T? GoN<T>(this Dictionary<string, T>? dict, string key)
     {
-        if (dict != null
-         && dict.ContainsKey(key)) return dict[key];
-        return default;
+        T? value = default;
+        dict?.TryGetValue(key, out value);
+        return value;
     }
 
     /// <summary>

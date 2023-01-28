@@ -11,11 +11,48 @@ namespace Rusu.ViewModels
 {
     public sealed class MainWindowViewModel : ObservableObject
     {
-        public SecondWindow? View { get; set; }
+        public MainWindow? View { get; set; }
 
+        // Фон
+        private string _Background = @"White";
+        public string Background
+        {
+            get { return _Background; }
+            set { _Background = value; OnPropertyChanged(); }
+        }
+
+        public MainWindowViewModel()
+        {
+            // Команды.
+            ChangeButton = new RelayCommand(x =>
+            {
+                SelectedDay = SelectedDay == FirstDay ? SecondDay : FirstDay;
+            }); // Смена расписания
+
+            CopyButton = new RelayCommand(x =>
+            {
+                if (SelectedDay is null) return;
+                string text = StringFormater.DayAsString(SelectedDay, File.Exists(Data.DayTemplatePath) ? File.ReadAllText(Data.DayTemplatePath) : null,
+                    lessonTemplate: File.Exists(Data.LessonTemplatePath) ? File.ReadAllText(Data.LessonTemplatePath) : null);
+                Clipboard.SetText(text);
+            }); // Копировать расписание
+
+            VersionButton = new RelayCommand(async x =>
+            {
+                string? saved = null;
+                if (VersionText == Data.VersionText) return;
+                saved = Data.VersionText;
+                VersionText = saved;
+                await Task.Delay(5000);
+                if (VersionText == saved) VersionText = Data.VersionName;
+            });
+        }
+
+        // Дни
         public Day? FirstDay { get; set; }
         public Day? SecondDay { get; set; }
 
+        // Выбранный день
         private Day? _SelectedDay;
         public Day? SelectedDay
         {
@@ -28,6 +65,7 @@ namespace Rusu.ViewModels
             }
         }
 
+        // Сообщение
         private string? _Text;
         public string? Text
         {
@@ -35,6 +73,7 @@ namespace Rusu.ViewModels
             set { _Text = value; OnPropertyChanged(); }
         }
 
+        // Текст версии
         private string _VersionText = Data.VersionName;
         public string VersionText
         {
@@ -42,41 +81,28 @@ namespace Rusu.ViewModels
             set { _VersionText = value; OnPropertyChanged(); }
         }
 
+        // Текст дня расписания
         public string ScheduleCurrentDateName
         {
-            get { return $"Расписание на {StringFormater.ShortDateName(SelectedDay?.Date) ?? SelectedDay?.DayOfWeek}"; }
+            get
+            {
+                if (SelectedDay == null) return "На ближайшее время расписания нет.";
+                return $"Расписание на {StringFormater.ShortDateName(SelectedDay?.Date) ?? SelectedDay?.DayOfWeek}";
+            }
         }
 
-        public MainWindowViewModel()
-        {
-            // Команды.
-            ChangeButton = new RelayCommand(x =>
-            {
-                SelectedDay = SelectedDay == FirstDay ? SecondDay : FirstDay;
-            });
-            CopyButton = new RelayCommand(x =>
-            {
-                if (SelectedDay is null) return;
-                string text = StringFormater.DayAsString(SelectedDay, File.Exists(Data.DayTemplatePath) ? File.ReadAllText(Data.DayTemplatePath) : null,
-                    lessonTemplate: File.Exists(Data.LessonTemplatePath) ? File.ReadAllText(Data.LessonTemplatePath) : null);
-                Clipboard.SetText(text);
-            });
-            VersionButton = new RelayCommand(async x =>
-            {
-                string? saved = null;
-                if (VersionText == Data.VersionText) return;
-                saved = Data.VersionText;
-                VersionText = saved;
-                await Task.Delay(5000);
-                if (VersionText == saved) VersionText = Data.VersionName;
-            });
-        }
+        #region Команды
+        public RelayCommand ChangeButton { get; set; }
 
-        private string _Background = @"White";
-        public string Background
+        public RelayCommand CopyButton { get; set; }
+
+        public RelayCommand VersionButton { get; set; }
+
+        private RelayCommand? _ExitButton;
+        public RelayCommand? ExitButton
         {
-            get { return _Background; }
-            set { _Background = value; OnPropertyChanged(); }
+            get { return _ExitButton; }
+            set { _ExitButton = value; OnPropertyChanged(); }
         }
 
         private RelayCommand? _ScheduleButton;
@@ -86,51 +112,12 @@ namespace Rusu.ViewModels
             set { _ScheduleButton = value; OnPropertyChanged(); }
         }
 
-        public RelayCommand ChangeButton { get; set; }
-
-        public RelayCommand CopyButton { get; set; }
-
-        private RelayCommand? _MinimizeButton;
-        public RelayCommand? MinimizeButton
-        {
-            get { return _MinimizeButton; }
-            set { _MinimizeButton = value; OnPropertyChanged(); }
-        }
-
-        private RelayCommand? _TopMostButton;
-        public RelayCommand? TopMostButton
-        {
-            get { return _TopMostButton; }
-            set { _TopMostButton = value; OnPropertyChanged(); }
-        }
-
-        private RelayCommand? _ExitButton;
-        public RelayCommand? ExitButton
-        {
-            get { return _ExitButton; }
-            set { _ExitButton = value; OnPropertyChanged(); }
-        }
-
-        public RelayCommand VersionButton { get; set; }
-
-        private RelayCommand? _TemplateEditorButton;
-        public RelayCommand? TemplateEditorButton
-        {
-            get { return _TemplateEditorButton; }
-            set { _TemplateEditorButton = value; OnPropertyChanged(); }
-        }
-
         private RelayCommand? _LessonCounterButton;
         public RelayCommand? LessonCounterButton
         {
             get { return _LessonCounterButton; }
             set { _LessonCounterButton = value; OnPropertyChanged(); }
         }
-
-
-        public void Show()
-        {
-            View?.Show();
-        }
+        #endregion
     }
 }

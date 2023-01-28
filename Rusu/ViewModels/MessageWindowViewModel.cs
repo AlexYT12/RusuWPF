@@ -5,6 +5,14 @@ namespace Rusu.ViewModels
 {
     public sealed class MessageWindowViewModel : Core.ObservableObject
     {
+        // Фон
+        private string _Background = @"White";
+        public string Background
+        {
+            get { return _Background; }
+            set { _Background = value; OnPropertyChanged(); }
+        }
+
         internal MessageWindow? View { get; set; }
         public MessageWindowViewModel()
         {
@@ -17,6 +25,13 @@ namespace Rusu.ViewModels
 
         }
 
+        /// <summary>
+        /// Показать сообщение.
+        /// </summary>
+        /// <param name="text">Текст</param>
+        /// <param name="button">Кнопка</param>
+        /// <param name="action">Действие при нажатии на кнопку</param>
+        /// <exception cref="Exception"></exception>
         internal void MessageBox(string text, string button = "Ок", Action? action = null)
         {
             Text = text;
@@ -41,13 +56,6 @@ namespace Rusu.ViewModels
             set { _ButtonText = value; OnPropertyChanged(); }
         }
         internal Action? Action;
-
-        private string _Background = @"White";
-        public string Background
-        {
-            get { return _Background; }
-            set { _Background = value; OnPropertyChanged(); }
-        }
 
         public Core.RelayCommand Command { get; set; }
     }

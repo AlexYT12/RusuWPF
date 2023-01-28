@@ -6,26 +6,34 @@ using System.IO;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Rusu.Lib
+namespace Rusu.Lib;
+
+public class ModelsToWpfConverter : IValueConverter
 {
-    public class ModelsToWpfConverter : IValueConverter
+    // Пути к шаблонам.
+    private const string _dayTemplatePath = "data/Templates/ProgramDayTemplate.txt";
+    private const string _lessonTemplatePath = "data/Templates/ProgramLessonTemplate.txt";
+
+    // Конвертировать объект для GUI.
+    public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        private const string _dayTemplatePath = "data/Templates/ProgramDayTemplate.txt";
-        private const string _lessonTemplatePath = "data/Templates/ProgramLessonTemplate.txt";
+        // День конвертировать в строку по шаблону.
+        if (value is Day day) return StringFormater.DayAsString(day,
+            File.Exists(_dayTemplatePath) ? File.ReadAllText(_dayTemplatePath) : null
+           , lessons: false);
 
-        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is Day day) return StringFormater.DayAsString(day,
-                File.Exists(_dayTemplatePath) ? File.ReadAllText(_dayTemplatePath) : null
-                , lessons: false);
-            if (value is Lesson lesson) return StringFormater.LessonAsString(lesson,
-                File.Exists(_lessonTemplatePath) ? File.ReadAllText(_lessonTemplatePath) : null);
-            return null;
-        }
+        // Занятие конвертировать в строку по шаблону.
+        if (value is Lesson lesson) return StringFormater.LessonAsString(lesson,
+            File.Exists(_lessonTemplatePath) ? File.ReadAllText(_lessonTemplatePath) : null);
 
-        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return DependencyProperty.UnsetValue;
-        }
+        // Вернуть значение таким, каким пришло.
+        return value;
+    }
+    
+    // В обратной конвертации нет нужды.
+    public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        // Сообщает, что свойство не имеет значений.
+        return DependencyProperty.UnsetValue;
     }
 }

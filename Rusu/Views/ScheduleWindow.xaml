@@ -61,7 +61,7 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="{Binding Converter={StaticResource ConvertToString}, Mode=OneWay}"
+                            <TextBlock Text="{Binding Converter={StaticResource ToWpf}, Mode=OneWay}"
                                        Style="{StaticResource TextAll}"
                                        Background="#B2000000"
                                        TextAlignment="Center"/>
@@ -75,7 +75,7 @@
                                                 BorderThickness="1"
                                                 Padding="6"
                                                 CornerRadius="10">
-                                            <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ConvertToString}}"
+                                            <TextBlock Text="{Binding Mode=OneWay, Converter={StaticResource ToWpf}}"
                                                        Style="{StaticResource TextAll}"/>
                                         </Border>
                                     </DataTemplate>

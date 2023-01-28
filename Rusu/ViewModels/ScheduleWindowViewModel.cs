@@ -13,6 +13,14 @@ namespace Rusu.ViewModels;
 
 public sealed class ScheduleWindowViewModel : ObservableObject
 {
+    // Фон
+    private string _Background = @"White";
+    public string Background
+    {
+        get { return _Background; }
+        set { _Background = value; OnPropertyChanged(); }
+    }
+
     public ScheduleWindow? View { get; set; }
 
     private DateTime? _Date;
@@ -39,11 +47,16 @@ public sealed class ScheduleWindowViewModel : ObservableObject
             if (Days != null)
             {
                 string text = "";
+
                 foreach (Day day in Days)
                     text += StringFormater.DayAsString(day,
                         File.Exists(Data.DayTemplatePath) ? File.ReadAllText(Data.DayTemplatePath) : null,
                         date: day.ToString(),
-                        lessonTemplate: File.Exists(Data.LessonTemplatePath) ? File.ReadAllText(Data.LessonTemplatePath) : null) + Environment.NewLine + Environment.NewLine;
+                        lessonTemplate: File.Exists(Data.LessonTemplatePath)
+                                      ? File.ReadAllText(Data.LessonTemplatePath)
+                                      : null)
+                    + Environment.NewLine + Environment.NewLine;
+
                 Clipboard.SetText(text.Remove(text.Length - Environment.NewLine.Length * 2));
             }
         });
@@ -58,14 +71,7 @@ public sealed class ScheduleWindowViewModel : ObservableObject
 
     public async void DateUpdatedAsync()
     {
-        if (Date.HasValue) Days = await Rusu.Logic.Parser.SearchScheduleAsync(Date.Value);
-    }
-
-    private string _Background = @"White";
-    public string Background
-    {
-        get { return _Background; }
-        set { _Background = value; OnPropertyChanged(); }
+        if (Date.HasValue) Days = await Logic.Parser.SearchScheduleAsync(Date.Value);
     }
 
     public RelayCommand CopyButton { get; set; }

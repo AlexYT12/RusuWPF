@@ -1,9 +1,10 @@
 ﻿using RucSu.Models;
-using Rusu.Models;
 using Rusu.Lib;
+using Rusu.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rusu.Logic
@@ -21,8 +22,13 @@ namespace Rusu.Logic
             Dictionary<string, string?> result = new Dictionary<string, string?>();
             foreach (string line in lines)
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                if (line.Contains(c))
+                // Пропустить строчку если она пуста или является комментарием.
+                if (string.IsNullOrWhiteSpace(line)
+                || (line.Length > 1
+                 && line[0] == '/'
+                 && line[0] == '/')) continue;
+
+                if (line.Contains(c)) // Есть ли значение у параметра?
                 {
                     var keyValue = line.Split(c);
                     for (int i = 2; i < keyValue.Length; i++) keyValue[1] += c + keyValue[i];
@@ -48,9 +54,16 @@ namespace Rusu.Logic
             return text.ToString().Remove(text.Length - Environment.NewLine.Length);
         }
 
-        internal static Task<List<Day>?> SearchScheduleAsync(DateTime today)
+        /// <summary>
+        /// Получить расписание по дате.
+        /// </summary>
+        /// <param name="today">Дата</param>
+        /// <param name="cancel">Токен отмены</param>
+        /// <returns></returns>
+        internal static Task<List<Day>?> SearchScheduleAsync(DateTime date, CancellationToken? cancel = null)
         {
-            return RucSu.Logic.Parser.ScheduleAsync(Data.ScheduleParserContent + "&date-search=" + today.ToString("yyyy-MM-dd"));
+            return RucSu.Logic.Parser.ScheduleAsync(Data.ScheduleParserContent
+                + "&date-search=" + date.ToString("yyyy-MM-dd"), cancel: cancel);
         }
     }
 }

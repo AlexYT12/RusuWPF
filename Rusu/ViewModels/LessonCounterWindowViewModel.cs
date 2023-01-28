@@ -13,14 +13,16 @@ namespace Rusu.ViewModels
 {
     public sealed class LessonCounterWindowViewModel : ObservableObject
     {
-        // фон
+        // Фон
         private string _Background = "White";
-        private CancellationTokenSource? _DownloadWorking;
         public string Background
         {
             get { return _Background; }
             set { _Background = value; OnPropertyChanged(); }
         }
+
+        // Отмена загрузки
+        private CancellationTokenSource? _DownloadWorking;
 
         // Даты
         private DateTime _FirstDate = DateTime.Today;
@@ -37,9 +39,13 @@ namespace Rusu.ViewModels
             set { _SecondDate = value; OnPropertyChanged(); UpdateAsync(); }
         }
 
+        // Выбор предмета
         public RelayCommand ItemClickCommand { get; set; }
 
+        // Список предметов
         public ObservableCollection<LessonCounterModel> Items { get; set; } = new ObservableCollection<LessonCounterModel>();
+
+        // Список занятий
         private List<string>? _ItemDays;
         public List<string>? ItemDays
         {
@@ -47,7 +53,7 @@ namespace Rusu.ViewModels
             set { _ItemDays = value; OnPropertyChanged(); }
         }
 
-        // Анализ
+        // Лекций
         private int _LessonsCount;
         public int LessonsCount
         {
@@ -55,24 +61,12 @@ namespace Rusu.ViewModels
             set { _LessonsCount = value; OnPropertyChanged(); }
         }
 
+        // Дней
         private int _DaysCount;
         public int DaysCount
         {
             get { return _DaysCount; }
             set { _DaysCount = value; OnPropertyChanged(); }
-        }
-        private int _OnlyOnlineDaysCount;
-        public int OnlyOnlineDaysCount
-        {
-            get { return _OnlyOnlineDaysCount; }
-            set { _OnlyOnlineDaysCount = value; OnPropertyChanged(); }
-        }
-
-        private int _PracticeDaysCount;
-        public int PracticeDaysCount
-        {
-            get { return _PracticeDaysCount; }
-            set { _PracticeDaysCount = value; OnPropertyChanged(); }
         }
 
         private async void UpdateAsync()
@@ -83,24 +77,17 @@ namespace Rusu.ViewModels
                 await Task.Delay(1000);
             }
 
-            // Подготовка
             using (_DownloadWorking = new CancellationTokenSource())
             {
+                // Подготовка
                 Items.Clear();
 
                 LessonsCount = 0;
                 DaysCount = 0;
-                OnlyOnlineDaysCount = 0;
-                PracticeDaysCount = 0;
 
-                List<Day> days = new List<Day>();
+                List<Day> days = new();
 
-                if (FirstDate > SecondDate)
-                {
-                    var timed = FirstDate;
-                    FirstDate = SecondDate;
-                    SecondDate = timed;
-                }
+                if (FirstDate > SecondDate) (FirstDate, SecondDate) = (SecondDate, FirstDate);
                 DaysCount = (int)(SecondDate - FirstDate).TotalDays + 1;
 
                 // Получения расписаний
@@ -111,34 +98,28 @@ namespace Rusu.ViewModels
                     if (week != null) days.AddRange(week);
                 }
 
+                // Конвертирование занятий в строки.
                 var items = new Dictionary<string, List<string>>();
                 foreach (Day day in days)
                     if (day.Date > SecondDate) break;
                     else if (day.Date < FirstDate) continue;
-                    else
-                    {
-                        int online = 0;
-                        foreach (Lesson lesson in day.Lessons)
+                    else foreach (Lesson lesson in day.Lessons)
                         {
                             if (_DownloadWorking?.Token.IsCancellationRequested ?? true) return;
                             LessonsCount++;
                             if (!items.ContainsKey(lesson.Name)) items.Add(lesson.Name, new List<string>());
 
-                            var text = $"{lesson.Id}.  {day.Date.ToShortDateString()}, {lesson.PositionEdited}";
-
-                            items[lesson.Name].Add(text);
+                            items[lesson.Name].Add($"{lesson.Id}.  {day.Date.ToShortDateString()}, {lesson.PositionEdited}");
                         }
-                        if (online == day.Lessons.Count) OnlyOnlineDaysCount++;
-                        else PracticeDaysCount++;
-                    }
+
+                // Моделирование
                 foreach (var kv in items)
                 {
                     if (_DownloadWorking.Token.IsCancellationRequested) return;
-                    var online = kv.Value.Where(x => x.Contains("Онлайн")).Count();
+                    var lectures = kv.Value.Where(x => x.Contains("лекции")).Count();
                     Items.Add(new LessonCounterModel
                     {
-                        Text = $"{kv.Key}: {online}/{kv.Value.Count}",
-                        Online = online,
+                        Text = $"{kv.Key}: {lectures}/{kv.Value.Count}",
                         Days = kv.Value
                     });
                 }
