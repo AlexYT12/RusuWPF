@@ -90,43 +90,47 @@ internal sealed class Controller
 
         if (DataSettings != null && DataSettings.ContainsKey("save"))
         {
-            var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("save.txt"));
-            if (days != null) {
-                var sb = new StringBuilder();
-                foreach (Day day in days)
+            if (File.Exists("data/save.txt"))
+            {
+                var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("data/save.txt"));
+                if (days != null)
                 {
-                    if (day.Date < DateTime.Today) continue;
-                    var newDay = Schedule.Find(x => x.Date == day.Date);
-                    if (newDay == null) continue;
-                    if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
-                    else
-                        for (int i = 0; i < day.Lessons.Count; i++)
-                        {
-                            Lesson update = newDay.Lessons[i];
-                            Lesson was = day.Lessons[i];
-                            if (update.Id != was.Id
-                             || update.Name != was.Name
-                             || update.Position != was.Position
-                             || update.Teacher != was.Teacher)
-                                sb.AppendLine("Изменение в парах на "
-                                    + StringFormater.ShortDateName(day.Date)
-                                    ?? day.Date.ToShortDateString());
-                        }
-                }
-                string message = sb.ToString();
-                if (!string.IsNullOrWhiteSpace(message))
-                {
-                    if (MessageWindow == null)
+                    var sb = new StringBuilder();
+                    foreach (Day day in days)
                     {
-                        MessageWindow = new MessageWindow();
-                        if (MessageWindow.DataContext is MessageWindowViewModel vm)
-                            vm.Background = DataSettings.GoN("background-message") ?? Background;
+                        if (day.Date < DateTime.Today) continue;
+                        var newDay = Schedule.Find(x => x.Date == day.Date);
+                        if (newDay == null) continue;
+                        if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
+                        else
+                            for (int i = 0; i < day.Lessons.Count; i++)
+                            {
+                                Lesson update = newDay.Lessons[i];
+                                Lesson was = day.Lessons[i];
+                                if (update.Id != was.Id
+                                 || update.Name != was.Name
+                                 || update.Position != was.Position
+                                 || update.Teacher != was.Teacher)
+                                    sb.AppendLine("Изменение в парах на "
+                                        + StringFormater.ShortDateName(day.Date)
+                                        ?? day.Date.ToShortDateString());
+                            }
                     }
-                    ((MessageWindowViewModel)MessageWindow.DataContext).MessageBox(message);
+                    string message = sb.ToString();
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        if (MessageWindow == null)
+                        {
+                            MessageWindow = new MessageWindow();
+                            if (MessageWindow.DataContext is MessageWindowViewModel vm)
+                                vm.Background = DataSettings.GoN("background-message") ?? Background;
+                        }
+                        ((MessageWindowViewModel)MessageWindow.DataContext).MessageBox(message);
+                    }
                 }
             }
 
-            File.WriteAllText("save.txt", JsonSerializer.Serialize(Schedule));
+            File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
         }
 
         // Ближайшие дни.
