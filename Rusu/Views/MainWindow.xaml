@@ -62,7 +62,7 @@
                     <Button Command="{Binding VersionButton, Mode=OneTime}" Margin="2">
                         <TextBlock Text="{Binding VersionText}" TextWrapping="Wrap"/>
                     </Button>
-                    <Button Content="Снайпер преподавателей" Margin="2"/>
+                    <Button Content="Снайпер преподавателей" Margin="2" Command="{Binding TeacherSniperButton}"/>
                     <Button Content="Копировать" Command="{Binding CopyButton, Mode=OneTime}" Margin="2"/>
                     <Button Content="Сколько занятий" Margin="2" Command="{Binding LessonCounterButton}"/>
                 </UniformGrid>

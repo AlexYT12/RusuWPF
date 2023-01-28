@@ -1,6 +1,5 @@
 ﻿using Rusu.Core;
 using Rusu.Logic;
-using Rusu.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -16,7 +15,6 @@ namespace Rusu.Views
         public MainWindow()
         {
             InitializeComponent();
-            if (DataContext is MainWindowViewModel vm) vm.View = this;
 
             _controller = new Controller(this);
 

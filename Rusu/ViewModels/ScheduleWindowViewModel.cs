@@ -1,9 +1,7 @@
 ﻿using RucSu.Logic;
 using RucSu.Models;
 using Rusu.Core;
-using Rusu.Logic;
 using Rusu.Models;
-using Rusu.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +18,6 @@ public sealed class ScheduleWindowViewModel : ObservableObject
         get { return _Background; }
         set { _Background = value; OnPropertyChanged(); }
     }
-
-    public ScheduleWindow? View { get; set; }
 
     private DateTime? _Date;
     public DateTime? Date
@@ -61,12 +57,6 @@ public sealed class ScheduleWindowViewModel : ObservableObject
             }
         });
         NextButton = new RelayCommand(x => { if (x is string s) Date = Date.Value.AddDays(s == "Add" ? 7 : -7); });
-    }
-
-    public void Show()
-    {
-        if (View is null) return;
-        View.Show();
     }
 
     public async void DateUpdatedAsync()

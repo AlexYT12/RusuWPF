@@ -29,7 +29,7 @@ public class ModelsToWpfConverter : IValueConverter
         // Вернуть значение таким, каким пришло.
         return value;
     }
-    
+
     // В обратной конвертации нет нужды.
     public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
