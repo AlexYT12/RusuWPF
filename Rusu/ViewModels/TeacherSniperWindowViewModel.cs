@@ -17,11 +17,12 @@ internal class TeacherSniperWindowViewModel : ObservableObject
 
     public TeacherSniperWindowViewModel()
     {
-        //employee
         LoadValues();
 
+        NextButton = new RelayCommand(x => { if (x is string s) Date = Date.AddDays(s == "Add" ? 7 : -7); });
     }
 
+    // Загрузка списка преподавателей.
     public async void LoadValues()
     {
         Dictionary<string, Dictionary<string, string>>? values = await RucSu.Logic.Parser.GetValues(true, "4935b3ff-0858-11e0-8be3-005056bd3ce5");
@@ -29,12 +30,14 @@ internal class TeacherSniperWindowViewModel : ObservableObject
         Teachers = values["employee"];
     }
 
+    // Загрузка расписания.
     private async void UpdateAsync()
     {
         if (Teachers != null && SelectedTeacher != null)
             Days = await Logic.Parser.SearchScheduleAsync(Date, Teachers[SelectedTeacher]);
     }
 
+    #region Параметры
     private Dictionary<string, string>? _Teachers;
 
     public Dictionary<string, string>? Teachers
@@ -64,4 +67,7 @@ internal class TeacherSniperWindowViewModel : ObservableObject
         get { return _Days; }
         set { _Days = value; OnPropertyChanged(); }
     }
+
+    public RelayCommand NextButton { get; set; }
+    #endregion
 }

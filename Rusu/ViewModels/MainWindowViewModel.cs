@@ -20,6 +20,9 @@ public sealed class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
     {
+        // Текст
+        if (File.Exists("data/text.txt")) Text = File.ReadAllText("data/text.txt");
+
         // Команды.
         ChangeButton = new RelayCommand(x =>
         {
@@ -83,7 +86,7 @@ public sealed class MainWindowViewModel : ObservableObject
     {
         get
         {
-            if (SelectedDay == null) return "На ближайшее время расписания нет.";
+            if (SelectedDay == null) return "На ближайшее время расписания нет";
             return $"Расписание на {StringFormater.ShortDateName(SelectedDay?.Date) ?? SelectedDay?.DayOfWeek}";
         }
     }
