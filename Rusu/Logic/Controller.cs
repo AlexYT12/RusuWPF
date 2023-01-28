@@ -97,25 +97,21 @@ internal sealed class Controller
                 {
                     if (day.Date < DateTime.Today) continue;
                     var newDay = Schedule.Find(x => x.Date == day.Date);
-                    if (newDay != null)
-                    {
-                        if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
-                        else
+                    if (newDay == null) continue;
+                    if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
+                    else
+                        for (int i = 0; i < day.Lessons.Count; i++)
                         {
-                            for (int i=0; i < day.Lessons.Count; i++)
-                            {
-                                Lesson update = newDay.Lessons[i];
-                                Lesson was = day.Lessons[i];
-                                if (update.Id != was.Id
-                                 || update.Name != was.Name
-                                 || update.Position != was.Position
-                                 || update.Teacher != was.Teacher)
-                                    sb.AppendLine("Изменение в парах на "
-                                        + StringFormater.ShortDateName(day.Date)
-                                        ?? day.Date.ToShortDateString());
-                            }
+                            Lesson update = newDay.Lessons[i];
+                            Lesson was = day.Lessons[i];
+                            if (update.Id != was.Id
+                             || update.Name != was.Name
+                             || update.Position != was.Position
+                             || update.Teacher != was.Teacher)
+                                sb.AppendLine("Изменение в парах на "
+                                    + StringFormater.ShortDateName(day.Date)
+                                    ?? day.Date.ToShortDateString());
                         }
-                    }
                 }
                 string message = sb.ToString();
                 if (!string.IsNullOrWhiteSpace(message))
@@ -123,6 +119,8 @@ internal sealed class Controller
                     if (MessageWindow == null)
                     {
                         MessageWindow = new MessageWindow();
+                        if (MessageWindow.DataContext is MessageWindowViewModel vm)
+                            vm.Background = DataSettings.GoN("background-message") ?? Background;
                     }
                     ((MessageWindowViewModel)MessageWindow.DataContext).MessageBox(message);
                 }
