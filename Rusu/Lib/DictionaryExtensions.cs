@@ -28,9 +28,10 @@ internal static class DictionaryExtensions
     /// <returns>значение или null</returns>
     internal static T? Pop<T>(this Dictionary<string, T>? dict, string key)
     {
-        if (dict is null) return default;
-        var value = dict.GoN(key);
-        if (value != null) dict.Remove(key);
+        if (dict is null || !dict.ContainsKey(key)) return default;
+
+        T? value = dict[key];
+        dict.Remove(key);
         return value;
     }
 
