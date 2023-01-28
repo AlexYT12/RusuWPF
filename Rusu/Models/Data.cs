@@ -11,7 +11,7 @@ internal static class Data
 
     // Версия
     internal const string VersionName = @"К истокам";
-    internal const string VersionText = @"Версия: 1.9.8.0";
+    internal const string VersionText = @"Версия: 2.0";
 
     // Пути к шаблонам.
     internal const string DayTemplatePath = "data/Templates/DayTemplate.txt";
