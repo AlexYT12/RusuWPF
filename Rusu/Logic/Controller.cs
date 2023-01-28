@@ -1,4 +1,5 @@
-﻿using RucSu.Models;
+﻿using RucSu.Logic;
+using RucSu.Models;
 using Rusu.Core;
 using Rusu.Lib;
 using Rusu.Models;
@@ -7,6 +8,8 @@ using Rusu.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Text.Json;
 
 namespace Rusu.Logic;
 
@@ -84,6 +87,49 @@ internal sealed class Controller
         var NextWeek = await Parser.SearchScheduleAsync(today.AddDays(7));
         if (NextWeek != null) Schedule.AddRange(NextWeek);
         Today = Schedule.Find(x => x.Date == today);
+
+        if (DataSettings != null && DataSettings.ContainsKey("save"))
+        {
+            var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("save.txt"));
+            if (days != null) {
+                var sb = new StringBuilder();
+                foreach (Day day in days)
+                {
+                    if (day.Date < DateTime.Today) continue;
+                    var newDay = Schedule.Find(x => x.Date == day.Date);
+                    if (newDay != null)
+                    {
+                        if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
+                        else
+                        {
+                            for (int i=0; i < day.Lessons.Count; i++)
+                            {
+                                Lesson update = newDay.Lessons[i];
+                                Lesson was = day.Lessons[i];
+                                if (update.Id != was.Id
+                                 || update.Name != was.Name
+                                 || update.Position != was.Position
+                                 || update.Teacher != was.Teacher)
+                                    sb.AppendLine("Изменение в парах на "
+                                        + StringFormater.ShortDateName(day.Date)
+                                        ?? day.Date.ToShortDateString());
+                            }
+                        }
+                    }
+                }
+                string message = sb.ToString();
+                if (!string.IsNullOrWhiteSpace(message))
+                {
+                    if (MessageWindow == null)
+                    {
+                        MessageWindow = new MessageWindow();
+                    }
+                    ((MessageWindowViewModel)MessageWindow.DataContext).MessageBox(message);
+                }
+            }
+
+            File.WriteAllText("save.txt", JsonSerializer.Serialize(Schedule));
+        }
 
         // Ближайшие дни.
         int Adder = 0;
