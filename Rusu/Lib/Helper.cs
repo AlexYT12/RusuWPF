@@ -21,12 +21,14 @@ internal static class Helper
     internal static string? ReadText(string path)
     {
         // Загрзука с интернета.
-        if (path[0] == 'h'
+        if (path.Length > 5
+         && path[0] == 'h'
          && path[1] == 't'
          && path[2] == 't'
          && path[3] == 'p')
             using (HttpClient client = new HttpClient())
-                return client.GetStringAsync(path).GetAwaiter().GetResult();
+                return client.GetStringAsync(path).Result;
+
         // Чтение файла.
         if (File.Exists(path)) return File.ReadAllText(path);
 
@@ -45,6 +47,7 @@ internal static class Helper
     {
         try
         {
+            // Картинка
             if (File.Exists(color)
                 || color[0] == 'h'
                  && color[1] == 't'
@@ -52,11 +55,14 @@ internal static class Helper
                  && color[3] == 'p'
                 || color.StartsWith("pack://application:"))
                 return new ImageBrush(new BitmapImage(new Uri(color, UriKind.RelativeOrAbsolute)));
+
+            // Сплошной цвет
             return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
         }
         catch
         {
-            return new SolidColorBrush((Color)ColorConverter.ConvertFromString("red"));
+            // При ошибки, выдать сплошной красный цвет.
+            return new SolidColorBrush(Colors.Red);
         }
     }
 
