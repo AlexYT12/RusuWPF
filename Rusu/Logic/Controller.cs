@@ -189,7 +189,8 @@ internal sealed class Controller
 
     internal async void Close()
     {
-        while (!_save) await Task.Delay(200);
+        int repeats = 0;
+        while (!_save || repeats++ < 10) await Task.Delay(200);
         Environment.Exit(0);
     }
 }
