@@ -1,5 +1,4 @@
-﻿using RucSu.Logic;
-using RucSu.Models;
+﻿using RucSu.Models;
 using Rusu.Core;
 using Rusu.Lib;
 using Rusu.Models;
@@ -25,12 +24,13 @@ internal sealed class Controller
     /// </summary>
     string Background = "white";
 
-    // Окна
+    #region Окна
     internal MainWindowViewModel MainWindow { get; set; }
     internal MessageWindow? MessageWindow { get; set; }
     internal ScheduleWindow? ScheduleWindow { get; set; }
     internal LessonCounterWindow? LessonCounterWindow { get; set; }
     internal TeacherSniperWindow? TeacherSniperWindow { get; set; }
+    #endregion
 
     /// <summary>
     /// Сегодня
@@ -88,34 +88,44 @@ internal sealed class Controller
         if (NextWeek != null) Schedule.AddRange(NextWeek);
         Today = Schedule.Find(x => x.Date == today);
 
+        // Нужно ли отслеживать изменения расписания?
         if (DataSettings != null && DataSettings.ContainsKey("save"))
         {
+            // Существует ли сохраннённое расписание.
             if (File.Exists("data/save.txt"))
             {
                 var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("data/save.txt"));
                 if (days != null)
                 {
                     var sb = new StringBuilder();
+
+                    // Проверка каждого дня из сохранных дней.
                     foreach (Day day in days)
                     {
-                        if (day.Date < DateTime.Today) continue;
-                        var newDay = Schedule.Find(x => x.Date == day.Date);
-                        if (newDay == null) continue;
-                        if (newDay.Lessons.Count != day.Lessons.Count) sb.AppendLine("Изменилось количество пар на " + day.Date.ToShortDateString());
+                        if (day.Date < DateTime.Today) continue; // Если день уже прошёл - пропустить его.
+
+                        var newDay = Schedule.Find(x => x.Date == day.Date); // Найти день с такой же датой в расписании с сайта.
+                        if (newDay == null) continue; // Если день не найден - пропустить его.
+
+                        if (newDay.Lessons.Count != day.Lessons.Count) // Если количество занятий изменилось.
+                            sb.AppendLine("Изменилось количество занятий на " + day.ShortDate);
                         else
                             for (int i = 0; i < day.Lessons.Count; i++)
                             {
-                                Lesson update = newDay.Lessons[i];
-                                Lesson was = day.Lessons[i];
-                                if (update.Id != was.Id
-                                 || update.Name != was.Name
-                                 || update.Position != was.Position
-                                 || update.Teacher != was.Teacher)
-                                    sb.AppendLine("Изменение в парах на "
-                                        + StringFormater.ShortDateName(day.Date)
-                                        ?? day.Date.ToShortDateString());
+                                Lesson update = newDay.Lessons[i]; // Занятие с сайта
+                                Lesson was = day.Lessons[i]; // Занятие с файла
+
+                                if (update.Id == was.Id
+                                 && update.Name == was.Name
+                                 && update.Position == was.Position
+                                 && update.Teacher == was.Teacher) continue; // Если изменений нет, пропустить.
+
+                                sb.AppendLine("Изменение в занятиях на " + day.ShortDate);
+                                break;
                             }
                     }
+
+                    // Вывод сообщения об изменениях.
                     string message = sb.ToString();
                     if (!string.IsNullOrWhiteSpace(message))
                     {
@@ -130,6 +140,7 @@ internal sealed class Controller
                 }
             }
 
+            // Обновить расписание в файле.
             File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
         }
 
