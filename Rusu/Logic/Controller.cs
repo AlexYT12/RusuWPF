@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Rusu.Logic;
 
@@ -188,8 +187,20 @@ internal sealed class Controller
 
     internal void Close()
     {
-        if (ScheduleWindow != null) ScheduleWindow.CantClose = false;
-        if (TeacherSniperWindow != null) TeacherSniperWindow.CantClose = false;
-        if (LessonCounterWindow != null) LessonCounterWindow.CantClose = false;
+        if (ScheduleWindow != null)
+        {
+            ScheduleWindow.CantClose = false;
+            ScheduleWindow.Close();
+        }
+        if (TeacherSniperWindow != null)
+        {
+            TeacherSniperWindow.CantClose = false;
+            TeacherSniperWindow.Close();
+        }
+        if (LessonCounterWindow != null)
+        {
+            LessonCounterWindow.CantClose = false;
+            LessonCounterWindow.Close();
+        }
     }
 }
