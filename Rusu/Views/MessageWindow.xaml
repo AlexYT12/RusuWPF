@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Topmost="True"
         WindowStyle="ToolWindow"
-        Title="Уведомление" Height="180" Width="300"
+        Title="Уведомление" Height="240" Width="440"
         MinHeight="180" MinWidth="300">
     <Window.DataContext>
         <vm:MessageWindowViewModel/>
@@ -23,10 +23,10 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Text, Mode=OneWay}"
+                   Style="{StaticResource DemonicTextBlock}"
                    TextAlignment="Center"
                    FontSize="15"
-                   Foreground="White"
-                   Background="#66000000" TextWrapping="Wrap"/>
+                   Background="#66000000"/>
         <Button Grid.Row="1"
                 Content="{Binding ButtonText, Mode=OneWay}"
                 Command="{Binding Command, Mode=OneTime}"
