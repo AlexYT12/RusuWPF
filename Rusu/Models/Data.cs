@@ -10,8 +10,8 @@ internal static class Data
 "branch=4935b3ff-0858-11e0-8be3-005056bd3ce5&year=828ab065-a6a6-11ec-b157-3cecef02455b&group=8888e406-a6bf-11ec-b157-3cecef02455b&search-date=search-date";
 
     // Версия
-    internal const string VersionName = @"К истокам";
-    internal const string VersionText = @"Версия: 2.0";
+    internal const string VersionName = @"Back";
+    internal const string VersionText = @"Версия: 2.1 Fix";
 
     // Пути к шаблонам.
     internal const string DayTemplatePath = "data/Templates/DayTemplate.txt";
