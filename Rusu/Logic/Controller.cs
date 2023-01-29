@@ -186,11 +186,10 @@ internal sealed class Controller
         if (DataSettings is null) return;
     }
 
-    internal async void Close()
+    internal void Close()
     {
-        int repeats = 0;
-        while (!(DataSettings == null || DataSettings.ContainsKey("save"))
-              &&(!_save || repeats++ < 10)) await Task.Delay(200);
-        Environment.Exit(0);
+        if (ScheduleWindow != null) ScheduleWindow.CantClose = false;
+        if (TeacherSniperWindow != null) TeacherSniperWindow.CantClose = false;
+        if (LessonCounterWindow != null) LessonCounterWindow.CantClose = false;
     }
 }
