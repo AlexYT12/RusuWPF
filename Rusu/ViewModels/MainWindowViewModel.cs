@@ -20,9 +20,6 @@ public sealed class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
     {
-        // Текст
-        if (File.Exists("data/text.txt")) Text = File.ReadAllText("data/text.txt");
-
         // Команды.
         ChangeButton = new RelayCommand(x =>
         {
