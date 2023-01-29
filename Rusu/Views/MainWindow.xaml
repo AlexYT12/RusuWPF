@@ -33,11 +33,16 @@
             <!--  Сообщение  -->
             <Border CornerRadius="20"
                     Margin="10,10"
-                    Padding="20,10">
-                <TextBlock FontSize="15"
-                           Text="{Binding Text, TargetNullValue=Ничего нет., Mode=OneWay}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
+                    Padding="10">
+                <ScrollViewer
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Hidden">
+                    <TextBlock
+                        FontSize="15"
+                        Text="{Binding Text, TargetNullValue=Ничего нет., Mode=OneWay}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                </ScrollViewer>
             </Border>
             <!--  Кнопки расписания  -->
             <Grid Grid.Row="1">

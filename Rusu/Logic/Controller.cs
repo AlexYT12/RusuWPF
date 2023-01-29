@@ -26,7 +26,6 @@ internal sealed class Controller
 
     #region Окна
     internal MainWindowViewModel MainWindow { get; set; }
-    internal MessageWindow? MessageWindow { get; set; }
     internal ScheduleWindow? ScheduleWindow { get; set; }
     internal LessonCounterWindow? LessonCounterWindow { get; set; }
     internal TeacherSniperWindow? TeacherSniperWindow { get; set; }
@@ -97,7 +96,7 @@ internal sealed class Controller
                 var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("data/save.txt"));
                 if (days != null)
                 {
-                    var sb = new StringBuilder();
+                    StringBuilder sb = new StringBuilder();
 
                     // Проверка каждого дня из сохранных дней.
                     foreach (Day day in days)
@@ -108,7 +107,7 @@ internal sealed class Controller
                         if (newDay == null) continue; // Если день не найден - пропустить его.
 
                         if (newDay.Lessons.Count != day.Lessons.Count) // Если количество занятий изменилось.
-                            sb.AppendLine("Изменилось количество занятий на " + day.ShortDate);
+                            sb.AppendLine("Изменения на " + day.ShortDate);
                         else
                             for (int i = 0; i < day.Lessons.Count; i++)
                             {
@@ -120,7 +119,7 @@ internal sealed class Controller
                                  && update.Position == was.Position
                                  && update.Teacher == was.Teacher) continue; // Если изменений нет, пропустить.
 
-                                sb.AppendLine("Изменение в занятиях на " + day.ShortDate);
+                                sb.AppendLine("Изменения на " + day.ShortDate);
                                 break;
                             }
                     }
@@ -129,13 +128,7 @@ internal sealed class Controller
                     string message = sb.ToString();
                     if (!string.IsNullOrWhiteSpace(message))
                     {
-                        if (MessageWindow == null)
-                        {
-                            MessageWindow = new MessageWindow();
-                            if (MessageWindow.DataContext is MessageWindowViewModel vm)
-                                vm.Background = DataSettings.GoN("background-message") ?? Background;
-                        }
-                        ((MessageWindowViewModel)MessageWindow.DataContext).MessageBox(message);
+                        MainWindow.Text = message;
                     }
                 }
             }
@@ -183,10 +176,6 @@ internal sealed class Controller
         {
             if (ScheduleWindow?.DataContext is ScheduleWindowViewModel vm)
                 vm.Background = DataSettings.GoN("background-schedule") ?? Background;
-        }
-        {
-            if (MessageWindow?.DataContext is MessageWindowViewModel vm)
-                vm.Background = DataSettings.GoN("background-message") ?? Background;
         }
         {
             if (TeacherSniperWindow?.DataContext is TeacherSniperWindowViewModel vm)
