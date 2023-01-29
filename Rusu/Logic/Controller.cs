@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Rusu.Logic;
 
@@ -24,18 +25,14 @@ internal sealed class Controller
     /// </summary>
     string Background = "white";
 
+    private bool _save;
+
     #region Окна
     internal MainWindowViewModel MainWindow { get; set; }
     internal ScheduleWindow? ScheduleWindow { get; set; }
     internal LessonCounterWindow? LessonCounterWindow { get; set; }
     internal TeacherSniperWindow? TeacherSniperWindow { get; set; }
     #endregion
-
-    /// <summary>
-    /// Сегодня
-    /// </summary>
-    internal Day? Today;
-
 
     internal Controller(MainWindow mainWindow)
     {
@@ -85,7 +82,6 @@ internal sealed class Controller
         if (Schedule is null) return;
         var NextWeek = await Parser.SearchScheduleAsync(today.AddDays(7));
         if (NextWeek != null) Schedule.AddRange(NextWeek);
-        Today = Schedule.Find(x => x.Date == today);
 
         // Нужно ли отслеживать изменения расписания?
         if (DataSettings != null && DataSettings.ContainsKey("save"))
@@ -135,13 +131,14 @@ internal sealed class Controller
 
             // Обновить расписание в файле.
             File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
+
+            _save = true;
         }
 
         // Ближайшие дни.
         int Adder = 0;
         while (MainWindow.FirstDay == null && Adder < 15)
         {
-            if (Today != null) MainWindow.FirstDay = Today;
             MainWindow.FirstDay = Schedule.Find(x => x.Date == today.AddDays(Adder));
             Adder++;
         }
@@ -188,5 +185,11 @@ internal sealed class Controller
         #endregion
 
         if (DataSettings is null) return;
+    }
+
+    internal async void Close()
+    {
+        while (!_save) await Task.Delay(200);
+        Environment.Exit(0);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Rusu.Core;
 using Rusu.Logic;
-using System;
 using System.ComponentModel;
 using System.Windows;
 
@@ -27,7 +26,7 @@ namespace Rusu.Views
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            Environment.Exit(0);
+            _controller.Close();
         }
     }
 }
