@@ -24,8 +24,6 @@ internal sealed class Controller
     /// </summary>
     string Background = "white";
 
-    private bool _save;
-
     #region Окна
     internal MainWindowViewModel MainWindow { get; set; }
     internal ScheduleWindow? ScheduleWindow { get; set; }
@@ -131,7 +129,6 @@ internal sealed class Controller
             // Обновить расписание в файле.
             File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
         }
-        _save = true;
 
         // Ближайшие дни.
         int Adder = 0;
