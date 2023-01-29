@@ -131,9 +131,8 @@ internal sealed class Controller
 
             // Обновить расписание в файле.
             File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
-
-            _save = true;
         }
+        _save = true;
 
         // Ближайшие дни.
         int Adder = 0;
@@ -190,7 +189,8 @@ internal sealed class Controller
     internal async void Close()
     {
         int repeats = 0;
-        while (!_save || repeats++ < 10) await Task.Delay(200);
+        while (!(DataSettings == null || DataSettings.ContainsKey("save"))
+              &&(!_save || repeats++ < 10)) await Task.Delay(200);
         Environment.Exit(0);
     }
 }
