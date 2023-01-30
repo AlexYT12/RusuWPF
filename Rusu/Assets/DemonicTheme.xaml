@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:lib="clr-namespace:Rusu.Lib"
-                    xmlns:models="clr-namespace:Rusu.Models">
+                    xmlns:lib="clr-namespace:Rusu.Lib">
     <lib:ConvertToBrushConverter x:Key="ToBrush"/>
     <lib:ModelsToWpfConverter x:Key="ToWpf"/>
 

@@ -75,18 +75,18 @@ internal sealed class Controller
         var today = DateTime.Today;
 
         // Расписание
-        var Schedule = await Parser.SearchScheduleAsync(today);
+        List<Day>? Schedule = await Parser.SearchScheduleAsync(today);
         if (Schedule is null) return;
-        var NextWeek = await Parser.SearchScheduleAsync(today.AddDays(7));
+        List<Day>? NextWeek = await Parser.SearchScheduleAsync(today.AddDays(7));
         if (NextWeek != null) Schedule.AddRange(NextWeek);
 
         // Нужно ли отслеживать изменения расписания?
-        if (DataSettings != null && DataSettings.ContainsKey("save"))
+        if (DataSettings != null && DataSettings.ContainsKey("track"))
         {
             // Существует ли сохраннённое расписание.
-            if (File.Exists("data/save.txt"))
+            if (File.Exists("data/track.txt"))
             {
-                var days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("data/save.txt"));
+                List<Day>? days = JsonSerializer.Deserialize<List<Day>>(File.ReadAllText("data/track.txt"));
                 if (days != null)
                 {
                     StringBuilder sb = new StringBuilder();
@@ -96,7 +96,7 @@ internal sealed class Controller
                     {
                         if (day.Date < DateTime.Today) continue; // Если день уже прошёл - пропустить его.
 
-                        var newDay = Schedule.Find(x => x.Date == day.Date); // Найти день с такой же датой в расписании с сайта.
+                        Day? newDay = Schedule.Find(x => x.Date == day.Date); // Найти день с такой же датой в расписании с сайта.
                         if (newDay == null) continue; // Если день не найден - пропустить его.
 
                         if (newDay.Lessons.Count != day.Lessons.Count) // Если количество занятий изменилось.
@@ -127,7 +127,7 @@ internal sealed class Controller
             }
 
             // Обновить расписание в файле.
-            File.WriteAllText("data/save.txt", JsonSerializer.Serialize(Schedule));
+            File.WriteAllText("data/track.txt", JsonSerializer.Serialize(Schedule));
         }
 
         // Ближайшие дни.

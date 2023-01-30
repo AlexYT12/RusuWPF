@@ -26,15 +26,12 @@ internal static class Parser
             if (string.IsNullOrWhiteSpace(line)
             || (line.Length > 1
              && line[0] == '/'
-             && line[0] == '/')) continue;
+             && line[1] == '/')) continue;
 
-            if (line.Contains(c)) // Есть ли значение у параметра?
-            {
-                var keyValue = line.Split(c);
-                for (int i = 2; i < keyValue.Length; i++) keyValue[1] += c + keyValue[i];
-                result.InC(keyValue[0], keyValue[1]);
-            }
-            else result.InC(line, null);
+            int split = line.IndexOf(c);
+
+            if (split < 1 || split == line.Length) result.InC(line, null);
+            else result.InC(line.Remove(split), line.Remove(0, split + 1));
         }
         return result;
     }
@@ -48,10 +45,10 @@ internal static class Parser
     public static string SerializeByLineAndChar(Dictionary<string, string?> _object, char c = '=')
     {
         StringBuilder text = new StringBuilder();
-        foreach (var kv in _object)
+        foreach (KeyValuePair<string, string?> kv in _object)
             if (kv.Value == null) text.AppendLine(kv.Key);
             else text.AppendLine(kv.Key + c + kv.Value);
-        return text.ToString().Remove(text.Length - Environment.NewLine.Length);
+        return text.ToString();
     }
 
     /// <summary>

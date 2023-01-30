@@ -91,10 +91,10 @@ public sealed class LessonCounterWindowViewModel : ObservableObject
             DaysCount = (int)(SecondDate - FirstDate).TotalDays + 1;
 
             // Получения расписаний
-            var before = SecondDate.AddDays(7);
+            DateTime before = SecondDate.AddDays(7);
             for (DateTime date = FirstDate; date <= before; date = date.AddDays(7))
             {
-                var week = await Parser.SearchScheduleAsync(date);
+                List<Day>? week = await Parser.SearchScheduleAsync(date);
                 if (week != null) days.AddRange(week);
             }
 
@@ -113,10 +113,10 @@ public sealed class LessonCounterWindowViewModel : ObservableObject
                     }
 
             // Моделирование
-            foreach (var kv in items)
+            foreach (KeyValuePair<string, List<string>> kv in items)
             {
                 if (_DownloadWorking.Token.IsCancellationRequested) return;
-                var lectures = kv.Value.Where(x => x.Contains("лекции")).Count();
+                int lectures = kv.Value.Where(x => x.Contains("лекции")).Count();
                 Items.Add(new LessonCounterModel
                 {
                     Text = $"{kv.Key}: {lectures}/{kv.Value.Count}",
