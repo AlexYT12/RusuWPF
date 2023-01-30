@@ -182,7 +182,7 @@ internal sealed class Controller
         if (DataSettings is null) return;
     }
 
-    internal void Close()
+    internal void Exit()
     {
         if (ScheduleWindow != null)
         {

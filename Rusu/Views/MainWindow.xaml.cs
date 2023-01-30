@@ -26,7 +26,7 @@ namespace Rusu.Views
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            _controller.Close();
+            _controller.Exit();
             base.OnClosing(e);
         }
     }
