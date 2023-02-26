@@ -116,7 +116,7 @@ public sealed class LessonCounterWindowViewModel : ObservableObject
             foreach (KeyValuePair<string, List<string>> kv in items)
             {
                 if (_DownloadWorking.Token.IsCancellationRequested) return;
-                int lectures = kv.Value.Where(x => x.Contains("лекции")).Count();
+                int lectures = kv.Value.Where(x => x.Contains("лекция")).Count();
                 Items.Add(new LessonCounterModel
                 {
                     Text = $"{kv.Key}: {lectures}/{kv.Value.Count}",
